@@ -27,6 +27,7 @@ public final class ThreeDeadWheelLocalizer implements Localizer {
 
     public final double inPerTick = 0.01;
 
+
     private int lastPar0Pos, lastPar1Pos, lastPerpPos;
 
     public ThreeDeadWheelLocalizer(HardwareMap hardwareMap, double inPerTick) {
