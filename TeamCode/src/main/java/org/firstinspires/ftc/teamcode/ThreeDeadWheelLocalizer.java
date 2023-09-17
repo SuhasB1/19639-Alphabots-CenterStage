@@ -10,6 +10,7 @@ import com.acmerobotics.roadrunner.ftc.FlightRecorder;
 import com.acmerobotics.roadrunner.ftc.PositionVelocityPair;
 import com.acmerobotics.roadrunner.ftc.RawEncoder;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
 @Config
@@ -24,18 +25,23 @@ public final class ThreeDeadWheelLocalizer implements Localizer {
 
     public final Encoder par0, par1, perp;
 
-    public final double inPerTick;
+    public final double inPerTick = 0.01;
 
     private int lastPar0Pos, lastPar1Pos, lastPerpPos;
 
     public ThreeDeadWheelLocalizer(HardwareMap hardwareMap, double inPerTick) {
-        par0 = new RawEncoder(hardwareMap.get(DcMotorEx.class, "par0"));
-        par1 = new RawEncoder(hardwareMap.get(DcMotorEx.class, "par1"));
-        perp = new RawEncoder(hardwareMap.get(DcMotorEx.class, "perp"));
+
+        par0 = new RawEncoder(hardwareMap.get(DcMotorEx.class, "rightFront"));
+        par1 = new RawEncoder(hardwareMap.get(DcMotorEx.class, "leftRear"));
+        perp = new RawEncoder(hardwareMap.get(DcMotorEx.class, "leftFront"));
+        par0.setDirection(DcMotorSimple.Direction.REVERSE);
+        par1.setDirection(DcMotorSimple.Direction.REVERSE);
 
         lastPar0Pos = par0.getPositionAndVelocity().position;
         lastPar1Pos = par1.getPositionAndVelocity().position;
         lastPerpPos = perp.getPositionAndVelocity().position;
+
+
 
         this.inPerTick = inPerTick;
 
@@ -46,6 +52,8 @@ public final class ThreeDeadWheelLocalizer implements Localizer {
         PositionVelocityPair par0PosVel = par0.getPositionAndVelocity();
         PositionVelocityPair par1PosVel = par1.getPositionAndVelocity();
         PositionVelocityPair perpPosVel = perp.getPositionAndVelocity();
+
+
 
         int par0PosDelta = par0PosVel.position - lastPar0Pos;
         int par1PosDelta = par1PosVel.position - lastPar1Pos;
