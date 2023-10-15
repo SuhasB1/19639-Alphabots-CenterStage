@@ -31,9 +31,5 @@ public class MeepMeepTesting {
                 .addEntity(myBot)
                 .start();
     }
-<<<<<<< HEAD
-}
 
-=======
 }
->>>>>>> origin/master
