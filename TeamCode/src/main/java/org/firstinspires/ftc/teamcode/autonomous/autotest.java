@@ -68,7 +68,7 @@ public class autotest extends LinearOpMode {
             telemetry.addData("Selected Starting Position", startPosition);
 
             //Run Vuforia Tensor Flow and keep watching for the identifier in the Signal Cone.
-
+            runTfodTensorFlow();
             telemetry.addData("Vision identified Parking Location", identifiedSpikeMarkLocation);
             telemetry.update();
         }
