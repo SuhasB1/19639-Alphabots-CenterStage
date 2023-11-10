@@ -11,10 +11,10 @@ import org.opencv.core.Rect;
 import org.opencv.core.Scalar;
 import org.opencv.imgproc.Imgproc;
 public class TeamPropDetection implements VisionProcessor {
-public Rect rectLeft = new Rect(110, 42, 40, 40);
-public Rect rectMiddle = new Rect(160, 42, 40, 40);
-public Rect rectRight = new Rect(210, 42, 40, 40);
-Selected selection = Selected.NONE;
+public Rect rectLeft = new Rect(110, 250, 80, 100);
+public Rect rectMiddle = new Rect(300, 250, 80, 100);
+public Rect rectRight = new Rect(500, 250, 80, 100);
+Selected selection = Selected.RIGHT;
 Mat submat = new Mat();
 Mat hsvMat = new Mat();
 @Override
@@ -26,11 +26,9 @@ public Object processFrame(Mat frame, long captureTimeNanos) {
 
         double satRectLeft = getAvgSaturation(hsvMat, rectLeft);
         double satRectMiddle = getAvgSaturation(hsvMat, rectMiddle);
-        double satRectRight = getAvgSaturation(hsvMat, rectRight);
-
-        if ((satRectLeft > satRectMiddle) && (satRectLeft > satRectRight)) {
+        if ((satRectLeft > satRectMiddle)) {
              return Selected.LEFT;
-             } else if ((satRectMiddle > satRectLeft) && (satRectMiddle > satRectRight)) {
+             } else if ((satRectMiddle > satRectLeft)) {
              return Selected.MIDDLE;
              }
          return Selected.RIGHT;
@@ -52,12 +50,12 @@ public Object processFrame(Mat frame, long captureTimeNanos) {
 public void onDrawFrame(Canvas canvas, int onscreenWidth, int onscreenHeight, float scaleBmpPxToCanvasPx, float scaleCanvasDensity, Object userContext)
             {
         Paint selectedPaint = new Paint();
-        selectedPaint.setColor(Color.RED);
+        selectedPaint.setColor(Color.GREEN);
         selectedPaint.setStyle(Paint.Style.STROKE);
         selectedPaint.setStrokeWidth(scaleCanvasDensity * 4);
 
         Paint nonSelectedPaint = new Paint(selectedPaint);
-        nonSelectedPaint.setColor(Color.GREEN);
+        nonSelectedPaint.setColor(Color.RED);
 
         android.graphics.Rect drawRectangleLeft = makeGraphicsRect(rectLeft, scaleBmpPxToCanvasPx);
         android.graphics.Rect drawRectangleMiddle = makeGraphicsRect(rectMiddle, scaleBmpPxToCanvasPx);
@@ -80,11 +78,6 @@ public void onDrawFrame(Canvas canvas, int onscreenWidth, int onscreenHeight, fl
                 canvas.drawRect(drawRectangleMiddle, nonSelectedPaint);
                 canvas.drawRect(drawRectangleRight, selectedPaint);
                  break;
-            case NONE:
-                canvas.drawRect(drawRectangleLeft, nonSelectedPaint);
-                canvas.drawRect(drawRectangleMiddle, nonSelectedPaint);
-                canvas.drawRect(drawRectangleRight, nonSelectedPaint);
-                break;
             }
         }
 
@@ -93,7 +86,6 @@ public void onDrawFrame(Canvas canvas, int onscreenWidth, int onscreenHeight, fl
         }
 
         public enum Selected {
-            NONE,
             LEFT,
             MIDDLE,
             RIGHT
