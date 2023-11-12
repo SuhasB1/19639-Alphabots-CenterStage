@@ -19,7 +19,7 @@ public class MeepMeepTesting {
                                 .splineTo(new Vector2d(30, 30), Math.PI / 2)
                                 .build());
 
-        meepMeep.setBackground(MeepMeep.Background.FIELD_POWERPLAY_OFFICIAL)
+        meepMeep.setBackground(MeepMeep.Background.FIELD_CENTERSTAGE_JUICE_DARK)
                 .setDarkMode(true)
                 .setBackgroundAlpha(0.95f)
                 .addEntity(myBot)
