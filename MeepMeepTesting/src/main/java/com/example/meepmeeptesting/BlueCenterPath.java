@@ -16,7 +16,7 @@ public class BlueCenterPath {
 
         RoadRunnerBotEntity myBot = new DefaultBotBuilder(meepMeep)
                 // Set bot constraints: maxVel, maxAccel, maxAngVel, maxAngAccel, track width
-                .setConstraints(60, 175, Math.toRadians(180), Math.toRadians(180), 15)
+                .setConstraints(50, 175, Math.PI, Math.PI, 13.9)
                 .followTrajectorySequence(drive -> drive.trajectorySequenceBuilder(new Pose2d(-35.3, 59, Math.toRadians(270)))
                         .splineToConstantHeading(new Vector2d(-35.1, 31), Math.toRadians(270))
                         .build()

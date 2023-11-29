@@ -11,6 +11,7 @@ public class RightBlueLeftPath {
 
         RoadRunnerBotEntity myBot = new DefaultBotBuilder(meepMeep)
         // Set bot constraints: maxVel, maxAccel, maxAngVel, maxAngAccel, track width
+                .setConstraints(50, 175, Math.PI, Math.PI, 13.9)
                 .followTrajectorySequence(drive ->
                         drive.trajectorySequenceBuilder(new Pose2d(9.9, 59.2, Math.toRadians(90)))
                                 .splineToLinearHeading(new Pose2d(9.9, 34.2), Math.toRadians(180))
