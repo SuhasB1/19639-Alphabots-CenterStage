@@ -14,7 +14,7 @@ public class RightRedRightPath {
                 .setConstraints(50, 175, Math.PI, Math.PI, 13.9)
                 .followTrajectorySequence(drive ->
                         drive.trajectorySequenceBuilder(new Pose2d(9.9, -34.2, Math.toRadians(90)))
-                                .splineToLinearHeading(new Pose2d(9.9, -34.2), Math.toRadians(0))
+                                .splineToLinearHeading(new Pose2d(9.9, -34.2,  Math.toRadians(0)), Math.toRadians(0))
                                 .splineToConstantHeading(new Vector2d(47.4, -34.7), Math.toRadians(0))
                                 .build()
                 );
