@@ -10,7 +10,6 @@ public class RedLeftPath {
     public static void main(String[] args) {
         MeepMeep meepMeep = new MeepMeep(800);
 
-
         RoadRunnerBotEntity myBot = new DefaultBotBuilder(meepMeep)
                 // Set bot constraints: maxVel, maxAccel, maxAngVel, maxAngAccel, track width
                 .setConstraints(60, 175, Math.toRadians(180), Math.toRadians(180), 15)

@@ -15,7 +15,6 @@ public class BlueLeftPath {
     public static void main(String[] args) {
         MeepMeep meepMeep = new MeepMeep(800);
 
-
         RoadRunnerBotEntity myBot = new DefaultBotBuilder(meepMeep)
                 // Set bot constraints: maxVel, maxAccel, maxAngVel, maxAngAccel, track width
                 .setColorScheme(new ColorSchemeBlueDark())
