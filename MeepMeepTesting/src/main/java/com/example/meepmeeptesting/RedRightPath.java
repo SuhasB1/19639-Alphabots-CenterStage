@@ -1,5 +1,7 @@
 package com.example.meepmeeptesting;
 
+import static java.lang.Math.toRadians;
+
 import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.acmerobotics.roadrunner.geometry.Vector2d;
 import com.noahbres.meepmeep.MeepMeep;
@@ -16,12 +18,11 @@ public class RedRightPath {
                 // Set bot constraints: maxVel, maxAccel, maxAngVel, maxAngAccel, track width
                 .setConstraints(50, 175, Math.PI, Math.PI, 13.9)
                 .followTrajectorySequence(drive ->
-                        drive.trajectorySequenceBuilder(new Pose2d(-33, -62.5, Math.toRadians(90)))
-                                .splineToLinearHeading(new Pose2d(-31.5, -30, Math.toRadians(0)), Math.toRadians(90))
-                                .splineToConstantHeading(new Vector2d(-44.1, -12.2), Math.toRadians(0))
-                                .splineToLinearHeading(new Pose2d(0, -11, Math.toRadians(180)), Math.toRadians(270))
-                                .splineToConstantHeading(new Vector2d(36.5, -16), Math.toRadians(0))
-                                .splineToConstantHeading(new Vector2d(35.5, -24), Math.toRadians(270))
+                        drive.trajectorySequenceBuilder(new Pose2d(-33, -62.5, toRadians(90)))
+                                .splineToSplineHeading(new Pose2d(-30.0,-29.0,0.0), toRadians(90.0))
+                                .back(1e-3)
+                                .splineToSplineHeading(new Pose2d(-36.0,-20.0, toRadians(0.0)), toRadians(90.0))
+                                .splineToSplineHeading(new Pose2d(36.0,-12.0, toRadians(180.0)), toRadians(0.0))
                                 .build()
 
                 );
