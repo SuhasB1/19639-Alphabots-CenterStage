@@ -23,7 +23,9 @@ public class BlueLeftPath {
                         drive.trajectorySequenceBuilder(new Pose2d(-35.3, 59, Math.toRadians(270)))
                                 .splineToLinearHeading(new Pose2d(-35.1, 31, Math.toRadians(0)), Math.toRadians(270))
                                 .splineToConstantHeading(new Vector2d(-23.4, 7.4), Math.toRadians(0))
-                                .splineToLinearHeading(new Pose2d(37.7, 27.3, Math.toRadians(180)), Math.toRadians(90))
+                                .splineToConstantHeading(new Vector2d(30, 10), Math.toRadians(0))
+                                .splineToLinearHeading(new Pose2d(39, 35.8, Math.toRadians(180)), Math.toRadians(0))
+
                                 .build()
 
                 );

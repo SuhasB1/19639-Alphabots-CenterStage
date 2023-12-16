@@ -18,6 +18,7 @@ public class RightBlueCenterPath {
                 .followTrajectorySequence(drive ->
                         drive.trajectorySequenceBuilder(new Pose2d(9.9, 59.2, Math.toRadians(270)))
                                 .splineToConstantHeading(new Vector2d(9.9, 34.2), Math.toRadians(270))
+                                .splineToConstantHeading(new Vector2d(9.7,47.9 ), Math.toRadians(270))
                                 .splineToLinearHeading(new Pose2d(47.4, 34., Math.toRadians(180)) , Math.toRadians(0))
                                 .build()
                 );

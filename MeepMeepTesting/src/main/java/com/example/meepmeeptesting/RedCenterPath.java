@@ -18,10 +18,12 @@ public class RedCenterPath {
                 .followTrajectorySequence(drive ->
                         drive.trajectorySequenceBuilder(new Pose2d(-33, -62.5, Math.toRadians(90)))
                                 .splineToConstantHeading(new Vector2d(-36, -32), Math.toRadians(90))
-                                .splineToLinearHeading(new Pose2d(-53.2, -29.4, Math.toRadians(180)), Math.toRadians(90))
-                                .splineToConstantHeading(new Vector2d(-40.2, 0.9), Math.toRadians(0))
-                                .splineToConstantHeading(new Vector2d(33.1, -14.5), Math.toRadians(0))
-                                .splineToConstantHeading(new Vector2d(35.8, -23.6), Math.toRadians(270))
+                                .back(1e-3)
+                                .splineToConstantHeading(new Vector2d(-58.7, -12.3), Math.toRadians(90))
+                                .splineToLinearHeading(new Pose2d(-56, -3, Math.toRadians(180)), Math.toRadians(0))
+                                .setTangent(0)
+                                .splineToConstantHeading(new Vector2d(40, -36), Math.toRadians(270))
+
                                 .build()
 
                 );
