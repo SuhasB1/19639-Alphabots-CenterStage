@@ -18,7 +18,7 @@ public class intakeFunc extends OpMode {
     @Override
     public void init(){
         telemetry = new MultipleTelemetry(telemetry, FtcDashboard.getInstance().getTelemetry());
-        intakeMotor = hardwareMap.get(DcMotorEx.class, "left");
+        intakeMotor = hardwareMap.get(DcMotorEx.class, "intakeMotor");
 
 
 

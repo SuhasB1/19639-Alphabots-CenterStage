@@ -20,8 +20,8 @@ public class linearSlidesTickCounter extends OpMode {
     @Override
     public void init(){
         telemetry = new MultipleTelemetry(telemetry, FtcDashboard.getInstance().getTelemetry());
-        armmotor1 = hardwareMap.get(DcMotorEx.class, "left");
-        armmotor2 = hardwareMap.get(DcMotorEx.class, "right");
+        armmotor1 = hardwareMap.get(DcMotorEx.class, "leftSlides");
+        armmotor2 = hardwareMap.get(DcMotorEx.class, "rightSlides");
         armmotor1.setDirection(DcMotorSimple.Direction.REVERSE);
         armmotor1.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         armmotor2.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);

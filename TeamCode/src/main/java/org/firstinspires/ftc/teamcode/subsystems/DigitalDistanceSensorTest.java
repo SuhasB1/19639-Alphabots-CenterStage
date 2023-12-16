@@ -13,7 +13,7 @@ public class DigitalDistanceSensorTest extends LinearOpMode {
     @Override
     public void runOpMode() throws InterruptedException {
         telemetry = new MultipleTelemetry(telemetry, FtcDashboard.getInstance().getTelemetry());
-        DigitalChannel sensor = hardwareMap.get(DigitalChannel.class, "configSensorName");
+        DigitalChannel sensor = hardwareMap.get(DigitalChannel.class, "leftDistanceSensor");
 
         waitForStart();
         while (opModeIsActive()){
