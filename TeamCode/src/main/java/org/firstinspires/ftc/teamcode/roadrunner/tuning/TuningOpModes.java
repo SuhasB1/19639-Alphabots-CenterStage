@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.roadrunner;
+package org.firstinspires.ftc.teamcode.roadrunner.tuning;
 
 import com.acmerobotics.roadrunner.Pose2d;
 import com.acmerobotics.roadrunner.ftc.AngularRampLogger;
@@ -19,6 +19,12 @@ import com.qualcomm.robotcore.eventloop.opmode.OpModeManager;
 import com.qualcomm.robotcore.eventloop.opmode.OpModeRegistrar;
 
 import org.firstinspires.ftc.robotcore.internal.opmode.OpModeMeta;
+import org.firstinspires.ftc.teamcode.roadrunner.MecanumDrive;
+import org.firstinspires.ftc.teamcode.roadrunner.ThreeDeadWheelLocalizer;
+import org.firstinspires.ftc.teamcode.roadrunner.tuning.LocalizationTest;
+import org.firstinspires.ftc.teamcode.roadrunner.tuning.ManualFeedbackTuner;
+import org.firstinspires.ftc.teamcode.roadrunner.tuning.SplineTest;
+import org.firstinspires.ftc.teamcode.roadrunner.tuning.TwoDeadWheelLocalizer;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -54,9 +60,9 @@ public final class TuningOpModes {
                 if (md.localizer instanceof MecanumDrive.DriveLocalizer) {
                     MecanumDrive.DriveLocalizer dl = (MecanumDrive.DriveLocalizer) md.localizer;
                     leftEncs.add(dl.leftFront);
-                    leftEncs.add(dl.leftRear);
+                    leftEncs.add(dl.leftBack);
                     rightEncs.add(dl.rightFront);
-                    rightEncs.add(dl.rightRear);
+                    rightEncs.add(dl.rightBack);
                 } else if (md.localizer instanceof ThreeDeadWheelLocalizer) {
                     ThreeDeadWheelLocalizer dl = (ThreeDeadWheelLocalizer) md.localizer;
                     parEncs.add(dl.par0);

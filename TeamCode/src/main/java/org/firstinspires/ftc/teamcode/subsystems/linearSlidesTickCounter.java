@@ -1,10 +1,9 @@
-package org.firstinspires.ftc.teamcode.autonomous;
+package org.firstinspires.ftc.teamcode.subsystems;
 
 
 import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.config.Config;
 import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
-import com.arcrobotics.ftclib.controller.PIDController;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
@@ -12,8 +11,8 @@ import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 
 @Config
-@TeleOp(name="basic encoders slides")
-public class linearslidestest extends OpMode {
+@TeleOp(name="linear slides tick counter")
+public class linearSlidesTickCounter extends OpMode {
     private DcMotorEx armmotor1;
     private DcMotorEx armmotor2;
 
