@@ -19,8 +19,8 @@ public class PIDControllerOpmode extends OpMode {
 
     private PIDController controllerRight;
     private PIDController controllerLeft;
-    public static double Lp = 0.04, Li=0, Ld = 0.0002;
-    public static double Rp = 0.04, Ri=0, Rd = 0.0002;
+    public static double Lp = 0.015, Li=0, Ld = 0.0003;
+    public static double Rp = 0.015, Ri=0, Rd = 0.0003;
     public static double f =0.1;
     public static int targetPos = 0;
     public int left_arm_pos;
@@ -38,7 +38,7 @@ public class PIDControllerOpmode extends OpMode {
         telemetry = new MultipleTelemetry(telemetry, FtcDashboard.getInstance().getTelemetry());
         armmotor1 = hardwareMap.get(DcMotorEx.class, "leftSlides");
         armmotor2 = hardwareMap.get(DcMotorEx.class, "rightSlides");
-        armmotor1.setDirection(DcMotorSimple.Direction.REVERSE);
+        armmotor2.setDirection(DcMotorSimple.Direction.REVERSE);
         count = 1;
         count2 = 1;
         time = 0;
@@ -68,7 +68,7 @@ public class PIDControllerOpmode extends OpMode {
             left_arm_pos = (armmotor1.getCurrentPosition());
             right_arm_pos = (armmotor2.getCurrentPosition());
             double leftPID = controllerLeft.calculate(left_arm_pos, targetPos);
-            double rightPID = controllerRight.calculate(right_arm_pos, (targetPos-30));
+            double rightPID = controllerRight.calculate(right_arm_pos, targetPos);
             double leftPower = leftPID + f;
             double rightPower = rightPID + f;
             armmotor1.setPower(leftPower);
