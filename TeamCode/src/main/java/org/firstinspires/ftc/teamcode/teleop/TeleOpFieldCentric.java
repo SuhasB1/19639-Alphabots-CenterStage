@@ -14,6 +14,7 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
+import com.qualcomm.robotcore.hardware.DigitalChannel;
 import com.qualcomm.robotcore.hardware.Gamepad;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
@@ -51,12 +52,12 @@ public class TeleOpFieldCentric extends LinearOpMode {
     DcMotorEx intakeMotor;
     Servo dumpServo1;
     Servo dumpServo2;
-    public static double dumpInitPosition = 0.16;
+    public static double dumpInitPosition = 0.15;
 
     public static double dumpOnePosition = 0.575;
 
-    public static double dumpTwoPosition = 0.58;
-    //0.16 for starting
+    public static double dumpTwoPosition = dumpInitPosition;
+    //0.15 for starting
     //0.575 for one pixel
     //0.58 for second pixel
     public static double intakePower = 0;
@@ -112,6 +113,7 @@ public class TeleOpFieldCentric extends LinearOpMode {
         leftSlides = hardwareMap.get(DcMotorEx.class, "leftSlides");
         rightSlides = hardwareMap.get(DcMotorEx.class, "rightSlides");
         rightSlides.setDirection(DcMotorSimple.Direction.REVERSE);
+        DigitalChannel leftDistanceSensor = hardwareMap.get(DigitalChannel.class, "leftDistanceSensor");
 
         dumpServo1.setPosition(dumpInitPosition);
         dumpServo2.setPosition(dumpInitPosition);
@@ -187,6 +189,17 @@ public class TeleOpFieldCentric extends LinearOpMode {
             if(gamepad2.right_bumper){
                 dumpServo1.setPosition(dumpTwoPosition);
                 dumpServo2.setPosition(dumpTwoPosition);
+            }
+            boolean detectedLeft = leftDistanceSensor.getState();
+            detectedLeft = !detectedLeft;
+            if (detectedLeft){
+                intakePower = -0.7;
+                timer.startTime();
+                if(timer.seconds() >= 2){
+                    intakePower = 0;
+                }
+            }else{
+                timer.reset();
             }
             // Update the speed
             if (padSlowMode) {

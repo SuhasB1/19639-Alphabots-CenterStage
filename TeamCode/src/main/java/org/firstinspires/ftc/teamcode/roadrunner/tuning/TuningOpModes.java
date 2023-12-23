@@ -73,7 +73,7 @@ public final class TuningOpModes {
                     parEncs.add(dl.par);
                     perpEncs.add(dl.perp);
                 } else {
-                    throw new IllegalArgumentException("unknown localizer: " + md.localizer.getClass().getName());
+                    throw new RuntimeException("unknown localizer: " + md.localizer.getClass().getName());
                 }
 
                 return new DriveView(
@@ -122,7 +122,7 @@ public final class TuningOpModes {
                     parEncs.add(dl.par);
                     perpEncs.add(dl.perp);
                 } else {
-                    throw new IllegalArgumentException("unknown localizer: " + td.localizer.getClass().getName());
+                    throw new RuntimeException("unknown localizer: " + td.localizer.getClass().getName());
                 }
 
                 return new DriveView(
@@ -146,7 +146,7 @@ public final class TuningOpModes {
                 );
             };
         } else {
-            throw new AssertionError();
+            throw new RuntimeException();
         }
 
         manager.register(metaForClass(AngularRampLogger.class), new AngularRampLogger(dvf));

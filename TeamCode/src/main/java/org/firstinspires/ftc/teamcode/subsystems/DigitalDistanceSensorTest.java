@@ -13,12 +13,15 @@ public class DigitalDistanceSensorTest extends LinearOpMode {
     @Override
     public void runOpMode() throws InterruptedException {
         telemetry = new MultipleTelemetry(telemetry, FtcDashboard.getInstance().getTelemetry());
-        DigitalChannel sensor = hardwareMap.get(DigitalChannel.class, "leftDistanceSensor");
+        DigitalChannel leftDistanceSensor = hardwareMap.get(DigitalChannel.class, "leftDistanceSensor");
 
         waitForStart();
         while (opModeIsActive()){
-            boolean detected = sensor.getState();
-            telemetry.addData("detected? " , detected);
+            boolean detectedLeft = leftDistanceSensor.getState();
+            detectedLeft = !detectedLeft;
+            telemetry.addData("left detected? " , detectedLeft);
+            telemetry.addLine("testing if tle is working");
+            telemetry.update();
         }
     }
 
