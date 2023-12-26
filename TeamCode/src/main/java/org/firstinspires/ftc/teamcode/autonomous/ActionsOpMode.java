@@ -1,8 +1,14 @@
 package org.firstinspires.ftc.teamcode.autonomous;
 
+import android.util.Size;
+
 import androidx.annotation.NonNull;
+
+import org.firstinspires.ftc.teamcode.vision.BluePropThreshold;
 import  org.firstinspires.ftc.teamcode.vision.TeamPropDetection;
 import  org.firstinspires.ftc.teamcode.vision.TeamPropDetectionClass;
+
+import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
 import com.acmerobotics.dashboard.telemetry.TelemetryPacket;
 import com.acmerobotics.roadrunner.Action;
@@ -39,19 +45,17 @@ public class ActionsOpMode extends LinearOpMode {
     public int right_slides_pos;
     private PIDController controllerRight;
     private PIDController controllerLeft;
-
-    private org.firstinspires.ftc.teamcode.vision.TeamPropDetection visionProcessor;
-    private VisionPortal visionPortal;
-
+    private BluePropThreshold bluePropThreshold; //Create an object of the VisionProcessor Class
+    private VisionPortal portal;
     @Override
     public void runOpMode() {
         controllerLeft = new PIDController(Lp, Li, Ld);
         controllerRight = new PIDController(Rp, Ri, Rd);
         MecanumDrive drive = new MecanumDrive(hardwareMap, new Pose2d(0,0,0));
-        visionProcessor = new org.firstinspires.ftc.teamcode.vision.TeamPropDetection();
-        visionPortal = VisionPortal.easyCreateWithDefaults(
-                hardwareMap.get(WebcamName.class, "Webcam 1"), visionProcessor);
-
+        bluePropThreshold = new BluePropThreshold();
+        portal = VisionPortal.easyCreateWithDefaults(
+                hardwareMap.get(WebcamName.class, "Webcam 1"), bluePropThreshold);
+        FtcDashboard.getInstance().startCameraStream(bluePropThreshold, 0);
         // Delcare Trajectory as such
         Action TrajectoryAction1 = drive.actionBuilder(drive.pose)
                 .lineToX(10)
@@ -87,7 +91,8 @@ public class ActionsOpMode extends LinearOpMode {
 
 
         while(!isStopRequested() && !opModeIsActive()) {
-
+                telemetry.addData("position", bluePropThreshold.getPropPosition());
+                telemetry.update();
         }
         IntakeSystem intake = new IntakeSystem(hardwareMap);
         LinearSlides linearSlides = new LinearSlides(hardwareMap);
@@ -168,8 +173,13 @@ public class ActionsOpMode extends LinearOpMode {
     }
 
     public void getDetection() {
-        String position = String.valueOf(visionProcessor.getSelection());
-        cameraPos = position;
+        if(bluePropThreshold.getPropPosition().equals("left")){
+            cameraPos = "LEFT";
+        } else if (bluePropThreshold.getPropPosition().equals("center")) {
+            cameraPos = "CENTER";
+        }else{
+            cameraPos = "right";
+        }
     }
 
     public void backDropSlides(LinearSlides linearSlides) {
