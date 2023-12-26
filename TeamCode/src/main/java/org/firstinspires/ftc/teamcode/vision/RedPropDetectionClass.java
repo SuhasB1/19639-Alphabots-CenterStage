@@ -24,12 +24,12 @@ public class RedPropDetectionClass extends LinearOpMode {
         redPropThreshold = new RedPropThreshold();
         portal = VisionPortal.easyCreateWithDefaults(
                 hardwareMap.get(WebcamName.class, "Webcam 1"), redPropThreshold);
-       // FtcDashboard.getInstance().startCameraStream(redPropThreshold, 0);
+        FtcDashboard.getInstance().startCameraStream(redPropThreshold, 0);
         waitForStart();
         while (opModeIsActive()){
             telemetry.addData("position", redPropThreshold.getPropPosition());
-            //telemetry.addData("right blue val", redPropThreshold.getAveragedRightBox());
-            telemetry.addData("center blue val", redPropThreshold.getAveragedMiddleBox());
+            telemetry.addData("right red val", redPropThreshold.getAveragedRightBox());
+            telemetry.addData("center red val", redPropThreshold.getAveragedMiddleBox());
             telemetry.update();
             sleep(50);
         }
