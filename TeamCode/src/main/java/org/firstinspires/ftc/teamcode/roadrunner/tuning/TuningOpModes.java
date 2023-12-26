@@ -13,6 +13,7 @@ import com.acmerobotics.roadrunner.ftc.LateralPushTest;
 import com.acmerobotics.roadrunner.ftc.LateralRampLogger;
 import com.acmerobotics.roadrunner.ftc.ManualFeedforwardTuner;
 import com.acmerobotics.roadrunner.ftc.MecanumMotorDirectionDebugger;
+import com.acmerobotics.roadrunner.ftc.DeadWheelDirectionDebugger;
 import com.qualcomm.hardware.lynx.LynxModule;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.OpModeManager;
@@ -156,7 +157,7 @@ public final class TuningOpModes {
         manager.register(metaForClass(LateralRampLogger.class), new LateralRampLogger(dvf));
         manager.register(metaForClass(ManualFeedforwardTuner.class), new ManualFeedforwardTuner(dvf));
         manager.register(metaForClass(MecanumMotorDirectionDebugger.class), new MecanumMotorDirectionDebugger(dvf));
-
+        manager.register(metaForClass(DeadWheelDirectionDebugger.class), new DeadWheelDirectionDebugger(dvf));
         manager.register(metaForClass(ManualFeedbackTuner.class), ManualFeedbackTuner.class);
         manager.register(metaForClass(SplineTest.class), SplineTest.class);
         manager.register(metaForClass(LocalizationTest.class), LocalizationTest.class);

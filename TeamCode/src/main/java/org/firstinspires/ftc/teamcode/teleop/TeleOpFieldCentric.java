@@ -12,6 +12,7 @@ import com.arcrobotics.ftclib.controller.PIDController;
 import com.qualcomm.hardware.lynx.LynxModule;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.DigitalChannel;
@@ -25,20 +26,15 @@ import org.firstinspires.ftc.teamcode.roadrunner.MecanumDrive;
 
 import java.util.List;
 
-@TeleOp(name = "Teleop Field Centric")
+@TeleOp(name = "Teleop Robo-Centric (full buttons)")
 @Config
 public class TeleOpFieldCentric extends LinearOpMode {
 
     // TODO: PhotonFTC
 
-    // Declare a PIDF Controller to regulate heading
-    private final PIDFController.PIDCoefficients HEADING_PID_JOYSTICK = new PIDFController.PIDCoefficients(0.2, 0.0, 1);
-    private final PIDFController joystickHeadingController = new PIDFController(HEADING_PID_JOYSTICK);
     double speed;
     LynxModule CONTROL_HUB;
     LynxModule EXPANSION_HUB;
-    boolean fieldCentric = true;
-
     final ElapsedTime loopTime = new ElapsedTime();
     boolean pixelInOuttake; //need to use later
     final Gamepad currentGamepad1 = new Gamepad();
@@ -93,10 +89,6 @@ public class TeleOpFieldCentric extends LinearOpMode {
         CONTROL_HUB = allHubs.get(0);
         EXPANSION_HUB = allHubs.get(1);
 
-        // RoadRunner Init
-        MecanumDrive drive = new MecanumDrive(hardwareMap, PoseStorage.currentPose);
-        joystickHeadingController.setInputBounds(-Math.PI, Math.PI);
-
         // Telemetry Init
         telemetry.setMsTransmissionInterval(50);
         telemetry = new MultipleTelemetry(telemetry, FtcDashboard.getInstance().getTelemetry());
@@ -120,6 +112,8 @@ public class TeleOpFieldCentric extends LinearOpMode {
 
         targetPos = 0;
         intakePower = 0;
+
+        MecanumDrive drive = new MecanumDrive(hardwareMap, PoseStorage.currentPose);
 
         waitForStart();
 
@@ -145,12 +139,6 @@ public class TeleOpFieldCentric extends LinearOpMode {
             boolean padSlowMode = gamepad1.left_bumper;
             boolean padFastMode = gamepad1.right_bumper;
             boolean padResetPose = gamepad1.dpad_left && !previousGamepad1.dpad_left;
-
-            // Misc/Obscure
-            // Extra Settings
-            boolean pad1ExtraSettings = gamepad1.share;
-            boolean pad1ExTeamSwitch = gamepad1.dpad_left && !previousGamepad1.dpad_left; // 1 rumble blue, 2 rumble red
-            boolean pad1ExToggleFieldCentric = gamepad1.dpad_up && !previousGamepad1.dpad_up;
 
             //PID
             vertPIDController(targetPos);
@@ -209,90 +197,13 @@ public class TeleOpFieldCentric extends LinearOpMode {
             } else {
                 speed = .8;
             }
-
-            if (padResetPose) {
-                if (!(PoseStorage.currentTeam == PoseStorage.Team.BLUE)) {
-                    drive.pose = new Pose2d(drive.pose.position.x, drive.pose.position.y, Math.toRadians(90.0));
-                } else {
-                    drive.pose = new Pose2d(drive.pose.position.x, drive.pose.position.y, Math.toRadians(-90.0));
-                }
-                gamepad1.rumbleBlips(1);
-            }
-            if (pad1ExtraSettings) {
-                if (pad1ExToggleFieldCentric) {
-                    fieldCentric = !fieldCentric;
-                    if (fieldCentric) { gamepad1.rumbleBlips(2);}
-                    else { gamepad1.rumbleBlips(1);}
-                }
-
-                if (pad1ExTeamSwitch) {
-                    if (PoseStorage.currentTeam == PoseStorage.Team.RED) {
-                        gamepad1.rumbleBlips(1);
-                        PoseStorage.currentTeam = PoseStorage.Team.BLUE;
-
-                    } else {
-                        gamepad1.rumbleBlips(2);
-                        PoseStorage.currentTeam = PoseStorage.Team.RED;
-                    }
-                }
-            }
-
-            // Create a vector from the gamepad x/y inputs
-            // Then, rotate that vector by the inverse of that heading
-            Vector2d input = new Vector2d(
-                    -gamepad1.left_stick_y * speed,
-                    -gamepad1.left_stick_x * speed
-            );
-
-            //Pose2d poseEstimate = drive.pose;
-            double rotationAmount = -drive.pose.heading.toDouble(); // makes it into a double in radians.
-            if (fieldCentric) {
-                if (PoseStorage.currentTeam == PoseStorage.Team.BLUE) {
-                    rotationAmount = rotationAmount - Math.toRadians(90);
-                } else {
-                    rotationAmount = rotationAmount + Math.toRadians(90);
-
-                }
-                input = new Vector2d(input.x * Math.cos(rotationAmount) - input.y * Math.sin(rotationAmount), input.x * Math.sin(rotationAmount) + input.y * Math.cos(rotationAmount));
-            }
-            Vector2d controllerHeading = new Vector2d(-gamepad1.right_stick_y, -gamepad1.right_stick_x);
-
-            if (Math.sqrt(Math.pow(controllerHeading.x, 2.0) + Math.pow(controllerHeading.y, 2.0)) < 0.4) {
-                drive.setDrivePowers(
-                        new PoseVelocity2d(
-                                new Vector2d(
-                                        input.x,
-                                        input.y
-                                ),
-                                (gamepad1.left_trigger - gamepad1.right_trigger) * speed
-                        )
-                );
-            } else {
-                // Set the target heading for the heading controller to our desired angle
-
-                if (PoseStorage.currentTeam == PoseStorage.Team.BLUE) {
-                    joystickHeadingController.targetPosition = controllerHeading.angleCast().toDouble() + Math.toRadians(-90);
-                } else {
-                    joystickHeadingController.targetPosition = controllerHeading.angleCast().toDouble() + Math.toRadians(90);
-                }
-
-
-                // Set desired angular velocity to the heading controller output + angular
-                // velocity feedforward
-                double headingInput = (joystickHeadingController.update(drive.pose.heading.toDouble())
-                        * MecanumDrive.PARAMS.kV
-                        * MecanumDrive.PARAMS.trackWidthTicks);
-                drive.setDrivePowers(
-                        new PoseVelocity2d(
-                                new Vector2d(
-                                        input.x,
-                                        input.y
-                                ),
-                                headingInput
-                        )
-                );
-
-            }
+            drive.setDrivePowers(new PoseVelocity2d(
+                    new Vector2d(
+                            gamepad1.left_stick_y * speed,
+                            gamepad1.left_stick_x * speed
+                    ),
+                    -gamepad1.right_stick_x * speed
+            ));
 
             drive.updatePoseEstimate();
 
@@ -312,9 +223,6 @@ public class TeleOpFieldCentric extends LinearOpMode {
                 telemetry.addLine("--- Loop Times ---");
                 telemetry.addData("loopTimeMs", loopTimeMs);
                 telemetry.addData("loopTimeHz", 1000.0 / loopTimeMs);
-            }
-            if (showMotorTelemetry) {
-
             }
             telemetry.update();
         }

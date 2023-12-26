@@ -10,33 +10,13 @@ import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
 import org.firstinspires.ftc.teamcode.vision.BluePropThreshold;
 import org.firstinspires.ftc.vision.VisionPortal;
 
-@Autonomous(name="basic fsm")
+@Autonomous(name="basic vision")
 public class BasicAUtoClass extends LinearOpMode {
     private BluePropThreshold bluePropThreshold; //Create an object of the VisionProcessor Class
     Size resolution = new Size(640, 480);
-    private VisionPortal portal;
+    public VisionPortal portal;
 
     int propPosition = 0;
-
-    public enum basicFSM{
-        goToTape,
-        outtakePurple,
-        gotoBackdrop1,
-        gotoBackdrop2,
-        gotoBackdrop3,
-        gotoBackdrop4,
-        slidesExtend,
-        gotoBackdrop5,
-        dumperDown,
-        gotoBackdrop6,
-        gateRelease,
-        dumperUp,
-        gateClose,
-        slidesRetract,
-        goToParkingPos1,
-        goToParkingPos2,
-        finished
-    }
 
     @Override
     public void runOpMode() throws InterruptedException {

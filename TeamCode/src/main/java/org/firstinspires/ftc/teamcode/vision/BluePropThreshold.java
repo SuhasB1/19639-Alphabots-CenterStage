@@ -11,8 +11,24 @@ import org.opencv.core.Mat;
 import org.opencv.core.Rect;
 import org.opencv.core.Scalar;
 import org.opencv.imgproc.Imgproc;
+import android.graphics.Bitmap;
+import android.graphics.Canvas;
+import com.acmerobotics.dashboard.FtcDashboard;
+import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import java.util.concurrent.atomic.AtomicReference;
+import org.firstinspires.ftc.robotcore.external.function.Consumer;
+import org.firstinspires.ftc.robotcore.external.function.Continuation;
+import org.firstinspires.ftc.robotcore.external.hardware.camera.BuiltinCameraDirection;
+import org.firstinspires.ftc.robotcore.external.stream.CameraStreamSource;
+import org.firstinspires.ftc.robotcore.internal.camera.calibration.CameraCalibration;
+import org.firstinspires.ftc.vision.VisionPortal;
+import org.firstinspires.ftc.vision.VisionProcessor;
+import org.opencv.android.Utils;
+import org.opencv.core.Mat;
 
-public class BluePropThreshold implements VisionProcessor {
+
+public class BluePropThreshold implements VisionProcessor, CameraStreamSource {
     Mat testMat = new Mat();
     Mat highMat = new Mat();
     Mat lowMat = new Mat();
@@ -24,13 +40,19 @@ public class BluePropThreshold implements VisionProcessor {
     double averagedMiddleBox1 = 0;
 
 
-    static final Rect LEFT_RECTANGLE = new Rect(0, 0, 300, 300);
+    static final Rect LEFT_RECTANGLE = new Rect(200, 0, 75, 125);
 
-    static final Rect MIDDLE_RECTANGLE = new Rect(320, 0, 300, 300);
+    static final Rect MIDDLE_RECTANGLE = new Rect(270, 400, 75, 125);
+    private final AtomicReference<Bitmap> lastFrame =
+            new AtomicReference<>(Bitmap.createBitmap(1, 1, Bitmap.Config.RGB_565));
 
     @Override
     public void init(int width, int height, CameraCalibration calibration) {
-
+        lastFrame.set(Bitmap.createBitmap(width, height, Bitmap.Config.RGB_565));
+    }
+    @Override
+    public void getFrameBitmap(Continuation<? extends Consumer<Bitmap>> continuation) {
+        continuation.dispatch(bitmapConsumer -> bitmapConsumer.accept(lastFrame.get()));
     }
 
     @Override
@@ -74,10 +96,16 @@ public class BluePropThreshold implements VisionProcessor {
         finalMat.copyTo(frame); /*This line should only be added in when you want to see your custom pipeline
                                   on the driver station stream, do not use this permanently in your code as
                                   you use the "frame" mat for all of your pipelines, such as April Tags*/
+        Bitmap b = Bitmap.createBitmap(frame.width(), frame.height(), Bitmap.Config.RGB_565);
+        Utils.matToBitmap(frame, b);
+        lastFrame.set(b);
+
         return null;            //You do not return the original mat anymore, instead return null
 
 
+
     }
+
 
     private android.graphics.Rect makeGraphicsRect(Rect rect, float scaleBmpPxToCanvasPx) {
         int left = Math.round(rect.x * scaleBmpPxToCanvasPx);

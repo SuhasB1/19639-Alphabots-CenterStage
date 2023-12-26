@@ -8,6 +8,7 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import org.firstinspires.ftc.robotcore.external.hardware.camera.BuiltinCameraDirection;
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
 import org.firstinspires.ftc.vision.VisionPortal;
+import org.firstinspires.ftc.vision.VisionProcessor;
 
 @Autonomous(name="Vision Test - Red")
 public class RedPropDetectionClass extends LinearOpMode {
@@ -18,14 +19,8 @@ public class RedPropDetectionClass extends LinearOpMode {
     @Override
     public void runOpMode() throws InterruptedException {
         redPropThreshold = new RedPropThreshold();
-        portal = new VisionPortal.Builder()
-                .setCamera(hardwareMap.get(WebcamName.class, "Webcam 1"))
-                .setCameraResolution(resolution)
-                .setCamera(BuiltinCameraDirection.BACK)
-                .addProcessor(redPropThreshold)
-                .enableLiveView(true)
-                .setAutoStopLiveView(true)
-                .build();
+        portal = VisionPortal.easyCreateWithDefaults(
+                hardwareMap.get(WebcamName.class, "Webcam 1"), redPropThreshold);
 
 
         waitForStart();
