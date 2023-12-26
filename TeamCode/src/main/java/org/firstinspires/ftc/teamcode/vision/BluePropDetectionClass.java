@@ -28,7 +28,7 @@ public class BluePropDetectionClass extends LinearOpMode {
         waitForStart();
         while (opModeIsActive()){
             telemetry.addData("position", bluePropThreshold.getPropPosition());
-            telemetry.addData("left blue val", bluePropThreshold.getAveragedLeftBox());
+            telemetry.addData("right blue val", bluePropThreshold.getAveragedRightBox());
             telemetry.addData("center blue val", bluePropThreshold.getAveragedMiddleBox());
             telemetry.update();
             sleep(50);

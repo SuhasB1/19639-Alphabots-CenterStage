@@ -50,7 +50,7 @@ public class TeleOpFieldCentric extends LinearOpMode {
     Servo dumpServo2;
     public static double dumpInitPosition = 0.15;
 
-    public static double dumpOnePosition = 0.575;
+    public static double dumpOnePosition = 0.535;
 
     public static double dumpTwoPosition = dumpInitPosition;
     //0.15 for starting
@@ -236,7 +236,7 @@ public class TeleOpFieldCentric extends LinearOpMode {
             e.printStackTrace();
         }
     }
-    public void vertPIDController(int targetPosition){
+    public void vertPIDController(int targetPos){
         controllerLeft.setPID(Lp, Li, Ld);
         controllerRight.setPID(Rp, Ri, Rd);
         left_slides_pos = (leftSlides.getCurrentPosition());

@@ -11,9 +11,9 @@ import org.opencv.core.Rect;
 import org.opencv.core.Scalar;
 import org.opencv.imgproc.Imgproc;
 public class TeamPropDetection implements VisionProcessor {
-public Rect rectLeft = new Rect(110, 250, 80, 100);
-public Rect rectMiddle = new Rect(300, 250, 80, 100);
-public Rect rectRight = new Rect(500, 250, 80, 100);
+public Rect rectLeft = new Rect(110, 200, 80, 80);
+public Rect rectMiddle = new Rect(205, 215, 80, 80);
+public Rect rectRight = new Rect(500, 250, 80, 80);
 Selected selection = Selected.RIGHT;
 Mat submat = new Mat();
 Mat hsvMat = new Mat();
