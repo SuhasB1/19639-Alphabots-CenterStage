@@ -1,4 +1,3 @@
-
 package com.example.meepmeeptesting;
 
 import com.acmerobotics.roadrunner.geometry.Pose2d;
@@ -20,14 +19,13 @@ public class BlueLeftPath {
                 .setColorScheme(new ColorSchemeBlueDark())
                 .setConstraints(50, 175, Math.PI, Math.PI, 13.9)
                 .followTrajectorySequence(drive ->
-                        drive.trajectorySequenceBuilder(new Pose2d(-36, 35, Math.toRadians(90)))
+                                drive.trajectorySequenceBuilder(new Pose2d(-36, 35, Math.toRadians(90)))
 
-                                .splineToConstantHeading(new Vector2d(-23.4, 7.4), Math.toRadians(0))
-                                .splineToConstantHeading(new Vector2d(30, 10), Math.toRadians(0))
-//                                .splineToLinearHeading(new Pose2d(39, 35.8, Math.toRadians(180)), Math.toRadians(0))
-//                                .splineToConstantHeading(new Vector2d(56, 40), Math.toRadians(180))
-                                .splineToSplineHeading(new Pose2d(56, 40), Math.toRadians(180))
-                                .build()
+                                        .splineToConstantHeading(new Vector2d(-23.4, 7.4), Math.toRadians(0))
+                                        .splineToConstantHeading(new Vector2d(30, 10), Math.toRadians(0))
+                                .splineToLinearHeading(new Pose2d(39, 35.8, Math.toRadians(180)), Math.toRadians(0))
+                                .splineToConstantHeading(new Vector2d(56, 40), Math.toRadians(180))
+                                        .build()
 
                 );
 
@@ -55,4 +53,3 @@ public class BlueLeftPath {
                 .start();
     }
 }
-

@@ -4,6 +4,7 @@ import androidx.annotation.NonNull;
 
 import org.firstinspires.ftc.teamcode.vision.BluePropThreshold;
 
+import com.acmerobotics.dashboard.config.Config;
 import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
 import com.qualcomm.hardware.lynx.LynxModule;
 import com.acmerobotics.dashboard.FtcDashboard;
@@ -28,6 +29,7 @@ import org.firstinspires.ftc.vision.VisionPortal;
 import java.util.List;
 
 @Autonomous(name="BlueFar")
+@Config
 public class BlueFar extends LinearOpMode {
 
     LynxModule CONTROL_HUB;
@@ -40,7 +42,7 @@ public class BlueFar extends LinearOpMode {
 
     public static double dumpTwoPosition = dumpInitPosition;
 
-    public static String cameraPos = "";
+    public static String cameraPos = "MIDDLE";
     public static double f = 0.1;
     public int left_slides_pos;
     public int right_slides_pos;
@@ -50,6 +52,7 @@ public class BlueFar extends LinearOpMode {
     private VisionPortal portal;
 
     @Override
+
     public void runOpMode() {
 
         List<LynxModule> allHubs = hardwareMap.getAll(LynxModule.class);
@@ -72,7 +75,7 @@ public class BlueFar extends LinearOpMode {
         FtcDashboard.getInstance().startCameraStream(bluePropThreshold, 0);
         // Delcare Trajectory as such
         Action mainTraj = drive.actionBuilder(drive.pose)
-                .lineToYConstantHeading(-36)
+                .lineToYConstantHeading(35)
                 .build();
 
         Action trajLeft = drive.actionBuilder(new Pose2d(-36, 35, 90))
@@ -110,13 +113,13 @@ public class BlueFar extends LinearOpMode {
 
 
 
-//
-//        IntakeSystem intake = new IntakeSystem(hardwareMap);
-//        LinearSlides linearSlides = new LinearSlides(hardwareMap);
-//        DropperSystem drop = new DropperSystem(hardwareMap);
+
+        IntakeSystem intake = new IntakeSystem(hardwareMap);
+        LinearSlides linearSlides = new LinearSlides(hardwareMap);
+        DropperSystem drop = new DropperSystem(hardwareMap);
 
         while (!isStopRequested() && !opModeIsActive()) {
-//            allHubs.forEach(LynxModule::clearBulkCache);
+            allHubs.forEach(LynxModule::clearBulkCache);
 
             telemetry.addData("position", bluePropThreshold.getPropPosition());
             telemetry.update();
@@ -131,7 +134,7 @@ public class BlueFar extends LinearOpMode {
                 new SequentialAction(
                         mainTraj, // Example of a drive action
                         runInitialTrajectory(trajLeft, trajRight, trajCenter),
-                        //intake.outtake(),//outtake purple pixel
+                        intake.outtake(),//outtake purple pixel
                         runBackDropTrajectory(backDropLeft,backDropRight,backDropMiddle)
                         //linearSlides.moveSlides(1000),
                         //drop.dropper(),
@@ -165,7 +168,7 @@ public class BlueFar extends LinearOpMode {
     public Action runInitialTrajectory(Action trajLeft, Action trajRight, Action trajCenter) {
         //get camera position somehow
         //getDetection();
-        cameraPos = "MIDDLE";
+
         switch (cameraPos) {
 
             case "LEFT":
@@ -185,7 +188,7 @@ public class BlueFar extends LinearOpMode {
     }
 
     public Action runBackDropTrajectory(Action backDropLeft, Action backDropRight, Action backDropCenter) {
-        cameraPos = "MIDDLE";
+//        cameraPos = "MIDDLE";
         switch (cameraPos) {
             case "LEFT":
                 return backDropLeft;
@@ -224,9 +227,9 @@ public class BlueFar extends LinearOpMode {
 
 
         public DropperSystem(HardwareMap hardwareMap) {
-//            dumpServo1 = hardwareMap.get(Servo.class, "dumpServoLeft");
-//            dumpServo2 = hardwareMap.get(Servo.class, "dumpServoRight");
-//            dumpServo1.setDirection(Servo.Direction.REVERSE);
+            dumpServo1 = hardwareMap.get(Servo.class, "dumpServoLeft");
+            dumpServo2 = hardwareMap.get(Servo.class, "dumpServoRight");
+            dumpServo1.setDirection(Servo.Direction.REVERSE);
 
         }
 
@@ -251,7 +254,7 @@ public class BlueFar extends LinearOpMode {
         private DcMotorEx motor;
 
         public IntakeSystem(HardwareMap hardwareMap) {
-//            motor = hardwareMap.get(DcMotorEx.class, "intakeMotor");
+            motor = hardwareMap.get(DcMotorEx.class, "intakeMotor");
         }
 
 
@@ -277,8 +280,8 @@ public class BlueFar extends LinearOpMode {
 
 
         public LinearSlides(HardwareMap hardwareMap) {
-//            leftSlides = hardwareMap.get(DcMotorEx.class, "leftSlides");
-//            rightSlides = hardwareMap.get(DcMotorEx.class, "rightSlides");
+            leftSlides = hardwareMap.get(DcMotorEx.class, "leftSlides");
+            rightSlides = hardwareMap.get(DcMotorEx.class, "rightSlides");
 
 
         }
