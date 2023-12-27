@@ -2,19 +2,20 @@ package org.firstinspires.ftc.teamcode.autonomous;
 
 import androidx.annotation.NonNull;
 
-import org.firstinspires.ftc.teamcode.vision.BluePropThreshold;
-
+import com.acmerobotics.dashboard.FtcDashboard;
+import com.acmerobotics.dashboard.canvas.Canvas;
 import com.acmerobotics.dashboard.config.Config;
 import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
-import com.qualcomm.hardware.lynx.LynxModule;
-import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.telemetry.TelemetryPacket;
 import com.acmerobotics.roadrunner.Action;
+import com.acmerobotics.roadrunner.ParallelAction;
 import com.acmerobotics.roadrunner.Pose2d;
 import com.acmerobotics.roadrunner.SequentialAction;
+import com.acmerobotics.roadrunner.SleepAction;
 import com.acmerobotics.roadrunner.Vector2d;
 import com.acmerobotics.roadrunner.ftc.Actions;
 import com.arcrobotics.ftclib.controller.PIDController;
+import com.qualcomm.hardware.lynx.LynxModule;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
@@ -24,6 +25,7 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
 import org.firstinspires.ftc.teamcode.roadrunner.MecanumDrive;
+import org.firstinspires.ftc.teamcode.vision.BluePropThreshold;
 import org.firstinspires.ftc.vision.VisionPortal;
 
 import java.util.List;
@@ -51,9 +53,12 @@ public class BlueFar extends LinearOpMode {
     private BluePropThreshold bluePropThreshold; //Create an object of the VisionProcessor Class
     private VisionPortal portal;
 
+    private double targetPos = 0;
+
     @Override
 
     public void runOpMode() {
+        targetPos = 0;
 
         List<LynxModule> allHubs = hardwareMap.getAll(LynxModule.class);
 
@@ -73,10 +78,29 @@ public class BlueFar extends LinearOpMode {
         portal = VisionPortal.easyCreateWithDefaults(
                 hardwareMap.get(WebcamName.class, "Webcam 1"), bluePropThreshold);
         FtcDashboard.getInstance().startCameraStream(bluePropThreshold, 0);
+        IntakeSystem intake = new IntakeSystem(hardwareMap);
+        LinearSlides linearSlides = new LinearSlides(hardwareMap);
+        DropperSystem drop = new DropperSystem(hardwareMap);
+
+        Pose2d startPose = new Pose2d(-36,62,Math.toRadians(-90));
         // Delcare Trajectory as such
-        Action mainTraj = drive.actionBuilder(drive.pose)
-                .lineToYConstantHeading(35)
+        Action mainTraj = drive.actionBuilder(startPose)
+                .setReversed(true)
+                .lineToY(45)
+                .splineToSplineHeading(new Pose2d(-38,32, Math.toRadians(0)), Math.toRadians(-90))
+                .endTrajectory()
+                .waitSeconds(0.5)
+                .stopAndAdd(intake.idle())
+                .setReversed(true)
+                .setTangent(0)
+//                .lineToY(20)
+
+
+                .splineToConstantHeading(new Vector2d(-38, 10), Math.toRadians(0))
+                .splineTo(new Vector2d(20, 10), Math.toRadians(0))
+                .splineToSplineHeading(new Pose2d(53,38, Math.toRadians(180)), Math.toRadians(0))
                 .build();
+
 
         Action trajLeft = drive.actionBuilder(new Pose2d(-36, 35, 90))
                 .turnTo(0)
@@ -114,9 +138,7 @@ public class BlueFar extends LinearOpMode {
 
 
 
-        IntakeSystem intake = new IntakeSystem(hardwareMap);
-        LinearSlides linearSlides = new LinearSlides(hardwareMap);
-        DropperSystem drop = new DropperSystem(hardwareMap);
+
 
         while (!isStopRequested() && !opModeIsActive()) {
             allHubs.forEach(LynxModule::clearBulkCache);
@@ -129,36 +151,34 @@ public class BlueFar extends LinearOpMode {
         waitForStart();
 
         if (isStopRequested()) return;
-
         Actions.runBlocking(
                 new SequentialAction(
-                        mainTraj, // Example of a drive action
-                        runInitialTrajectory(trajLeft, trajRight, trajCenter),
-                        intake.outtake(),//outtake purple pixel
-                        runBackDropTrajectory(backDropLeft,backDropRight,backDropMiddle)
-                        //linearSlides.moveSlides(1000),
-                        //drop.dropper(),
-                        //linearSlides.moveSlides(0)
-//                        new ParallelAction(
-//                                runBackDropTrajectory(backDropLeft,backDropRight,backDropMiddle)
+                    mainTraj
+        ));
+//        Actions.runBlocking(new RaceParallelCommand(
+//                linearSlides.moveSlides(),
+//                new SequentialAction(
+//                        linearSlides.setTargetPos(1200),
+//                        new SleepAction(5000)
 //
-//                        )
+//                //mainTraj // Example of a drive action
+////                        runInitialTrajectory(trajLeft, trajRight, trajCenter),
+////                        intake.outtake(),//outtake purple pixel
+////                        runBackDropTrajectory(backDropLeft,backDropRight,backDropMiddle)
+//                //drop.dropper(),
+//                //linearSlides.moveSlides(0)
+////                        new ParallelAction(
+////                                runBackDropTrajectory(backDropLeft,backDropRight,backDropMiddle)
+////
+////                        )
+//
+//
+//        )
+//        ));
 
-                        // This action and the following action do the same thing
-
-                        // Only that this action uses a Lambda expression to reduce complexity
-
-//                        new ParallelAction( // several actions being run in parallel
-//                                TrajectoryAction2, // Run second trajectory
-//                                (telemetryPacket) -> { // Run some action
-//                                    telemetry.addLine("tetsstst");
-//                                    return false;
-//                                }
-//                        ),
 
 
-                )
-        );
+
 
 
     }
@@ -187,6 +207,8 @@ public class BlueFar extends LinearOpMode {
         return trajCenter;
     }
 
+
+
     public Action runBackDropTrajectory(Action backDropLeft, Action backDropRight, Action backDropCenter) {
 //        cameraPos = "MIDDLE";
         switch (cameraPos) {
@@ -204,6 +226,8 @@ public class BlueFar extends LinearOpMode {
         return backDropCenter;
     }
 
+
+
     public void getDetection() {
         if(bluePropThreshold.getPropPosition().equals("left")){
             cameraPos = "LEFT";
@@ -214,10 +238,7 @@ public class BlueFar extends LinearOpMode {
         }
     }
 
-    public void backDropSlides(LinearSlides linearSlides) {
-        sleep(2000);
-        linearSlides.moveSlides(1000);
-    }
+
 
     public class DropperSystem {
 
@@ -237,8 +258,8 @@ public class BlueFar extends LinearOpMode {
             return new Action() {
                 @Override
                 public boolean run(@NonNull TelemetryPacket packet) {
-                    dumpServo1.setPosition(dumpInitPosition);
-                    dumpServo2.setPosition(dumpInitPosition);
+                    dumpServo1.setPosition(0.53);
+                    dumpServo2.setPosition(0.53);
                     return false;
                 }
             };
@@ -261,18 +282,25 @@ public class BlueFar extends LinearOpMode {
         public Action outtake() {
             return new Action() {
                 private boolean initialized = false;
-                ElapsedTime timer = new ElapsedTime();
-
                 @Override
                 public boolean run(@NonNull TelemetryPacket packet) {
-                    timer.startTime();
                     motor.setPower(-0.75);
-                    sleep(2000);
+                    return false;
+                }
+            };
+        }
+        public Action idle() {
+            return new Action() {
+                private boolean initialized = false;
+                @Override
+                public boolean run(@NonNull TelemetryPacket packet) {
+                    motor.setPower(0);
                     return false;
                 }
             };
         }
     }
+
 
     public class LinearSlides {
         private DcMotorEx leftSlides;
@@ -285,7 +313,7 @@ public class BlueFar extends LinearOpMode {
 
 
         }
-        public void vertPIDController(double targetPos){
+        public void vertPIDController(){
             controllerLeft.setPID(Lp, Li, Ld);
             controllerRight.setPID(Rp, Ri, Rd);
             left_slides_pos = (leftSlides.getCurrentPosition());
@@ -302,19 +330,56 @@ public class BlueFar extends LinearOpMode {
 
         }
 
-
-        public Action moveSlides(double targetPos) {
+        public Action moveSlides() {
 
             return new Action() {
-
                 @Override
                 public boolean run(@NonNull TelemetryPacket packet) {
-                    vertPIDController(targetPos);
-                    return Math.abs((controllerLeft.getPositionError() + controllerRight.getPositionError()) / 2)  > 15;
+                    vertPIDController();
+                    return Math.abs(leftSlides.getCurrentPosition() - targetPos) > 15 || Math.abs(rightSlides.getCurrentPosition() - targetPos) > 15;
                 }
             };
         }
+
+        public Action setTargetPos(int target) {
+            return new Action() {
+                @Override
+                public boolean run(@NonNull TelemetryPacket packet) {
+                    targetPos = target;
+                    return false;
+                }
+            };
+        }
+
+
+
     }
+
+    public static class RaceParallelCommand implements Action {
+        private final Action[] actions;
+
+        public RaceParallelCommand(Action... actions) {
+            this.actions = actions;
+        }
+
+        @Override
+        public boolean run(@NonNull TelemetryPacket t) {
+            boolean finished = true;
+            for (Action action : actions) finished = finished && action.run(t);
+            return finished;
+        }
+
+        @Override
+        public void preview(@NonNull Canvas canvas) {
+            for (Action action : actions) action.preview(canvas);
+        }
+
+
+    }
+
+
+
+
 
 
 
