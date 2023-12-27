@@ -87,7 +87,7 @@ public class TeleOpFieldCentric extends LinearOpMode {
             module.setBulkCachingMode(LynxModule.BulkCachingMode.MANUAL);
         }
         CONTROL_HUB = allHubs.get(0);
-        EXPANSION_HUB = allHubs.get(1);
+       EXPANSION_HUB = allHubs.get(1);
 
         // Telemetry Init
         telemetry.setMsTransmissionInterval(50);
@@ -98,7 +98,9 @@ public class TeleOpFieldCentric extends LinearOpMode {
         intakeMotor = hardwareMap.get(DcMotorEx.class, "intakeMotor");
         dumpServo1 = hardwareMap.get(Servo.class, "dumpServoLeft");
         dumpServo2 = hardwareMap.get(Servo.class, "dumpServoRight");
-        dumpServo1.setDirection(Servo.Direction.REVERSE);
+
+
+
         controllerLeft = new PIDController(Lp,Li,Ld);
         controllerRight = new PIDController(Rp,Ri,Rd);
         telemetry = new MultipleTelemetry(telemetry, FtcDashboard.getInstance().getTelemetry());

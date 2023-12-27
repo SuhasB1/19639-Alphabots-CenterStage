@@ -18,10 +18,6 @@ public class TeamPropDetectionClass extends OpMode {
                 hardwareMap.get(WebcamName.class, "Webcam 1"), visionProcessor);
     }
 
-    @Override
-    public void init_loop() {
-
-    }
 
     @Override
     public void start() {

@@ -1,18 +1,14 @@
 package org.firstinspires.ftc.teamcode.autonomous;
 
-import android.util.Size;
-
 import androidx.annotation.NonNull;
 
 import org.firstinspires.ftc.teamcode.vision.BluePropThreshold;
-import  org.firstinspires.ftc.teamcode.vision.TeamPropDetection;
-import  org.firstinspires.ftc.teamcode.vision.TeamPropDetectionClass;
 
-import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
+import com.qualcomm.hardware.lynx.LynxModule;
+import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.telemetry.TelemetryPacket;
 import com.acmerobotics.roadrunner.Action;
-import com.acmerobotics.roadrunner.ParallelAction;
 import com.acmerobotics.roadrunner.Pose2d;
 import com.acmerobotics.roadrunner.SequentialAction;
 import com.acmerobotics.roadrunner.Vector2d;
@@ -20,82 +16,111 @@ import com.acmerobotics.roadrunner.ftc.Actions;
 import com.arcrobotics.ftclib.controller.PIDController;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
-import com.qualcomm.robotcore.eventloop.opmode.OpMode;
-import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.HardwareMap;
+import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
-import org.firstinspires.ftc.teamcode.roadrunner.MecanumDrive.FollowTrajectoryAction;
 import org.firstinspires.ftc.teamcode.roadrunner.MecanumDrive;
-import org.firstinspires.ftc.teamcode.vision.TeamPropDetection;
-import org.firstinspires.ftc.teamcode.vision.TeamPropDetectionClass;
 import org.firstinspires.ftc.vision.VisionPortal;
 
-@Autonomous(name="actions test")
-public class ActionsOpMode extends LinearOpMode {
+import java.util.List;
 
-    public static double Lp = 0.015, Li=0, Ld = 0.0003;
-    public static double Rp = 0.015, Ri=0, Rd = 0.0003;
+@Autonomous(name="BlueFar")
+public class BlueFar extends LinearOpMode {
+
+    LynxModule CONTROL_HUB;
+    LynxModule EXPANSION_HUB;
+    public static double Lp = 0.015, Li = 0, Ld = 0.0003;
+    public static double Rp = 0.015, Ri = 0, Rd = 0.0003;
+    public static double dumpInitPosition = 0.15;
+
+    public static double dumpOnePosition = 0.535;
+
+    public static double dumpTwoPosition = dumpInitPosition;
 
     public static String cameraPos = "";
-    public static double f =0.1;
+    public static double f = 0.1;
     public int left_slides_pos;
     public int right_slides_pos;
     private PIDController controllerRight;
     private PIDController controllerLeft;
     private BluePropThreshold bluePropThreshold; //Create an object of the VisionProcessor Class
     private VisionPortal portal;
+
     @Override
     public void runOpMode() {
+
+        List<LynxModule> allHubs = hardwareMap.getAll(LynxModule.class);
+
+        for (LynxModule module : allHubs) {
+            module.setBulkCachingMode(LynxModule.BulkCachingMode.AUTO);
+        }
+        CONTROL_HUB = allHubs.get(0);
+        EXPANSION_HUB = allHubs.get(1);
+
+        // Telemetry Init
+        telemetry.setMsTransmissionInterval(50);
+        telemetry = new MultipleTelemetry(telemetry, FtcDashboard.getInstance().getTelemetry());
         controllerLeft = new PIDController(Lp, Li, Ld);
         controllerRight = new PIDController(Rp, Ri, Rd);
-        MecanumDrive drive = new MecanumDrive(hardwareMap, new Pose2d(0,0,0));
+        MecanumDrive drive = new MecanumDrive(hardwareMap, new Pose2d(-36, 59, Math.toRadians(270)));
         bluePropThreshold = new BluePropThreshold();
         portal = VisionPortal.easyCreateWithDefaults(
                 hardwareMap.get(WebcamName.class, "Webcam 1"), bluePropThreshold);
         FtcDashboard.getInstance().startCameraStream(bluePropThreshold, 0);
         // Delcare Trajectory as such
-        Action TrajectoryAction1 = drive.actionBuilder(drive.pose)
-                .lineToX(10)
+        Action mainTraj = drive.actionBuilder(drive.pose)
+                .lineToYConstantHeading(-36)
                 .build();
 
-        Action TrajectoryAction2 = drive.actionBuilder(new Pose2d(15,20,0))
-                .splineTo(new Vector2d(5,5), Math.toRadians(90))
+        Action trajLeft = drive.actionBuilder(new Pose2d(-36, 35, 90))
+                .turnTo(0)
                 .build();
 
-        Action trajLeft = drive.actionBuilder(new Pose2d(15,20,0))
-                .splineTo(new Vector2d(5,5), Math.toRadians(90)) // random coordinates for now
+        Action trajCenter = drive.actionBuilder(new Pose2d(-36, 35, 90))
+                .splineToConstantHeading(new Vector2d(-36,14), Math.toRadians(90))
                 .build();
 
-        Action trajCenter = drive.actionBuilder(new Pose2d(15,20,0))
-                .splineTo(new Vector2d(5,5), Math.toRadians(90)) // random coordinates for now
+        Action trajRight = drive.actionBuilder(new Pose2d(-36, 35, 90))
+                .turnTo(180)
                 .build();
 
-        Action trajRight = drive.actionBuilder(new Pose2d(15,20,0))
-                .splineTo(new Vector2d(5,5), Math.toRadians(90)) // random coordinates for now
+        Action backDropLeft = drive.actionBuilder(new Pose2d(-36, 35, Math.toRadians(0)))
+                .splineToConstantHeading(new Vector2d(-23.4, 7.4), Math.toRadians(0))
+                .splineToConstantHeading(new Vector2d(30, 10), Math.toRadians(0))
+                .splineToLinearHeading(new Pose2d(39, 35.8, Math.toRadians(180)), Math.toRadians(0))
+                .splineToConstantHeading(new Vector2d(56, 40), Math.toRadians(180))
                 .build();
 
-        Action backDropLeft = drive.actionBuilder(new Pose2d(15,20,0))
-                .splineTo(new Vector2d(5,5), Math.toRadians(90)) // random coordinates for now
+        Action backDropMiddle = drive.actionBuilder(new Pose2d(-36, 35, Math.toRadians(270)))
+                .splineToConstantHeading(new Vector2d(-23.4, 7.4), Math.toRadians(0))
+                .splineToConstantHeading(new Vector2d(30, 10), Math.toRadians(0))
+                .splineToLinearHeading(new Pose2d(39, 35.8, Math.toRadians(180)), Math.toRadians(0))
+                .splineToConstantHeading(new Vector2d(56, 35), Math.toRadians(180))
                 .build();
 
-        Action backDropRight = drive.actionBuilder(new Pose2d(15,20,0))
-                .splineTo(new Vector2d(5,5), Math.toRadians(90)) // random coordinates for now
+        Action backDropRight = drive.actionBuilder(new Pose2d(-36, 35, Math.toRadians(180)))
+                .splineToConstantHeading(new Vector2d(-23.4, 7.4), Math.toRadians(0))
+                .splineToConstantHeading(new Vector2d(30, 10), Math.toRadians(0))
+                .splineToLinearHeading(new Pose2d(39, 35.8, Math.toRadians(180)), Math.toRadians(0))
+                .splineToConstantHeading(new Vector2d(56, 28), Math.toRadians(180))
                 .build();
 
-        Action backDropMiddle = drive.actionBuilder(new Pose2d(15,20,0))
-                .splineTo(new Vector2d(5,5), Math.toRadians(90)) // random coordinates for now
-                .build();
 
 
-        while(!isStopRequested() && !opModeIsActive()) {
-                telemetry.addData("position", bluePropThreshold.getPropPosition());
-                telemetry.update();
+//
+//        IntakeSystem intake = new IntakeSystem(hardwareMap);
+//        LinearSlides linearSlides = new LinearSlides(hardwareMap);
+//        DropperSystem drop = new DropperSystem(hardwareMap);
+
+        while (!isStopRequested() && !opModeIsActive()) {
+//            allHubs.forEach(LynxModule::clearBulkCache);
+
+            telemetry.addData("position", bluePropThreshold.getPropPosition());
+            telemetry.update();
         }
-        IntakeSystem intake = new IntakeSystem(hardwareMap);
-        LinearSlides linearSlides = new LinearSlides(hardwareMap);
 
 
         waitForStart();
@@ -104,12 +129,13 @@ public class ActionsOpMode extends LinearOpMode {
 
         Actions.runBlocking(
                 new SequentialAction(
-                        //TrajectoryAction1, // Example of a drive action
-                        //objectDetection.detect(), //figure out what pxel to place on
-                        //runInitialTrajectory(trajLeft, trajRight, trajCenter),
-                        TrajectoryAction1,
-                        intake.outtake()//outtake purple pixel
-                        //linearSlides.moveSlides(1000)
+                        mainTraj, // Example of a drive action
+                        runInitialTrajectory(trajLeft, trajRight, trajCenter),
+                        //intake.outtake(),//outtake purple pixel
+                        runBackDropTrajectory(backDropLeft,backDropRight,backDropMiddle)
+                        //linearSlides.moveSlides(1000),
+                        //drop.dropper(),
+                        //linearSlides.moveSlides(0)
 //                        new ParallelAction(
 //                                runBackDropTrajectory(backDropLeft,backDropRight,backDropMiddle)
 //
@@ -138,8 +164,10 @@ public class ActionsOpMode extends LinearOpMode {
 
     public Action runInitialTrajectory(Action trajLeft, Action trajRight, Action trajCenter) {
         //get camera position somehow
-        getDetection();
+        //getDetection();
+        cameraPos = "MIDDLE";
         switch (cameraPos) {
+
             case "LEFT":
                 return trajLeft;
 
@@ -157,7 +185,8 @@ public class ActionsOpMode extends LinearOpMode {
     }
 
     public Action runBackDropTrajectory(Action backDropLeft, Action backDropRight, Action backDropCenter) {
-        switch(cameraPos) {
+        cameraPos = "MIDDLE";
+        switch (cameraPos) {
             case "LEFT":
                 return backDropLeft;
 
@@ -187,6 +216,33 @@ public class ActionsOpMode extends LinearOpMode {
         linearSlides.moveSlides(1000);
     }
 
+    public class DropperSystem {
+
+        Servo dumpServo1;
+        Servo dumpServo2;
+
+
+
+        public DropperSystem(HardwareMap hardwareMap) {
+//            dumpServo1 = hardwareMap.get(Servo.class, "dumpServoLeft");
+//            dumpServo2 = hardwareMap.get(Servo.class, "dumpServoRight");
+//            dumpServo1.setDirection(Servo.Direction.REVERSE);
+
+        }
+
+        public Action dropper() {
+            return new Action() {
+                @Override
+                public boolean run(@NonNull TelemetryPacket packet) {
+                    dumpServo1.setPosition(dumpInitPosition);
+                    dumpServo2.setPosition(dumpInitPosition);
+                    return false;
+                }
+            };
+        }
+
+
+    }
 
 
 
@@ -195,7 +251,7 @@ public class ActionsOpMode extends LinearOpMode {
         private DcMotorEx motor;
 
         public IntakeSystem(HardwareMap hardwareMap) {
-            motor = hardwareMap.get(DcMotorEx.class, "intakeMotor");
+//            motor = hardwareMap.get(DcMotorEx.class, "intakeMotor");
         }
 
 
@@ -221,8 +277,8 @@ public class ActionsOpMode extends LinearOpMode {
 
 
         public LinearSlides(HardwareMap hardwareMap) {
-            leftSlides = hardwareMap.get(DcMotorEx.class, "leftSlides");
-            rightSlides = hardwareMap.get(DcMotorEx.class, "rightSlides");
+//            leftSlides = hardwareMap.get(DcMotorEx.class, "leftSlides");
+//            rightSlides = hardwareMap.get(DcMotorEx.class, "rightSlides");
 
 
         }
