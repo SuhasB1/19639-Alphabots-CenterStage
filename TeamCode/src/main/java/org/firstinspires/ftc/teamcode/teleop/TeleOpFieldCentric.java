@@ -51,12 +51,10 @@ public class TeleOpFieldCentric extends LinearOpMode {
     Servo dumpServo2;
     public static double dumpInitPosition = 0.17;
 
-    public static double dumpOnePosition = 0.535;
-
-    public static double dumpTwoPosition = dumpInitPosition;
-    //0.15 for starting
-    //0.575 for one pixel
-    //0.58 for second pixel
+    public static double dumpPosition = 0.64;
+    //0.17 for starting
+    //0.64 for first height
+    //0.666 for second height (2700)
     public static double intakePower = 0;
     //power is 0.75
     ElapsedTime timer = new ElapsedTime();
@@ -151,17 +149,16 @@ public class TeleOpFieldCentric extends LinearOpMode {
 
             //slides positions
             if(gamepad2.triangle){
-                targetPos = 2500;
+                targetPos = 2700;
+                dumpPosition = 0.666;
             }
             if(gamepad2.square){
                 targetPos = 2000;
-            }
-            if(gamepad2.circle){
-                targetPos = 1500;
+                dumpPosition = 0.64;
             }
             if(gamepad2.cross){
-                dumpServo1.setPosition(0.16);
-                dumpServo2.setPosition(0.16);
+                dumpServo1.setPosition(dumpInitPosition);
+                dumpServo2.setPosition(dumpInitPosition);
                 targetPos = 0;
 
             }
@@ -175,12 +172,12 @@ public class TeleOpFieldCentric extends LinearOpMode {
                 intakePower = 0.7;
             }
             if (gamepad2.left_bumper){
-                dumpServo1.setPosition(dumpOnePosition);
-                dumpServo2.setPosition(dumpOnePosition);
+                dumpServo1.setPosition(dumpInitPosition);
+                dumpServo2.setPosition(dumpInitPosition);
             }
             if(gamepad2.right_bumper){
-                dumpServo1.setPosition(dumpTwoPosition);
-                dumpServo2.setPosition(dumpTwoPosition);
+                dumpServo1.setPosition(dumpPosition);
+                dumpServo2.setPosition(dumpPosition);
             }
             boolean detectedLeft = leftDistanceSensor.getState();
             detectedLeft = !detectedLeft;
