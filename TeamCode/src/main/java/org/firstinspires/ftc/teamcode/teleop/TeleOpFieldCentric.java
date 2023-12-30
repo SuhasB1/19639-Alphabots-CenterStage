@@ -33,8 +33,9 @@ public class TeleOpFieldCentric extends LinearOpMode {
     // TODO: PhotonFTC
 
     double speed;
-    LynxModule CONTROL_HUB;
-    LynxModule EXPANSION_HUB;
+//    LynxModule CONTROL_H
+//    UB;
+//    LynxModule EXPANSION_HUB;
     final ElapsedTime loopTime = new ElapsedTime();
     boolean pixelInOuttake; //need to use later
     final Gamepad currentGamepad1 = new Gamepad();
@@ -48,7 +49,7 @@ public class TeleOpFieldCentric extends LinearOpMode {
     DcMotorEx intakeMotor;
     Servo dumpServo1;
     Servo dumpServo2;
-    public static double dumpInitPosition = 0.15;
+    public static double dumpInitPosition = 0.17;
 
     public static double dumpOnePosition = 0.535;
 
@@ -81,13 +82,13 @@ public class TeleOpFieldCentric extends LinearOpMode {
         // Enable Performance Optimization
 
         //PhotonCore.start(hardwareMap); // TODO: if somethings' wrong THIS IS WHY
-        List<LynxModule> allHubs = hardwareMap.getAll(LynxModule.class);
+//        List<LynxModule> allHubs = hardwareMap.getAll(LynxModule.class);
 
-        for (LynxModule module : allHubs) {
-            module.setBulkCachingMode(LynxModule.BulkCachingMode.MANUAL);
-        }
-        CONTROL_HUB = allHubs.get(0);
-       EXPANSION_HUB = allHubs.get(1);
+//        for (LynxModule module : allHubs) {
+//            module.setBulkCachingMode(LynxModule.BulkCachingMode.MANUAL);
+//        }
+//        CONTROL_HUB = allHubs.get(0);
+//       EXPANSION_HUB = allHubs.get(1);
 
         // Telemetry Init
         telemetry.setMsTransmissionInterval(50);
@@ -106,7 +107,6 @@ public class TeleOpFieldCentric extends LinearOpMode {
         telemetry = new MultipleTelemetry(telemetry, FtcDashboard.getInstance().getTelemetry());
         leftSlides = hardwareMap.get(DcMotorEx.class, "leftSlides");
         rightSlides = hardwareMap.get(DcMotorEx.class, "rightSlides");
-        rightSlides.setDirection(DcMotorSimple.Direction.REVERSE);
         DigitalChannel leftDistanceSensor = hardwareMap.get(DigitalChannel.class, "leftDistanceSensor");
 
         dumpServo1.setPosition(dumpInitPosition);
@@ -126,13 +126,15 @@ public class TeleOpFieldCentric extends LinearOpMode {
 
         while (opModeIsActive() && !isStopRequested()) {
             loopTime.reset();
-            allHubs.forEach(LynxModule::clearBulkCache);
+//            allHubs.forEach(LynxModule::clearBulkCache);
 
             previousGamepad1.copy(currentGamepad1);
             previousGamepad2.copy(currentGamepad2);
 
             currentGamepad1.copy(gamepad1);
             currentGamepad2.copy(gamepad2);
+            currentGamepad1.reset();
+            currentGamepad2.reset();
 
             // CONTROLS
 

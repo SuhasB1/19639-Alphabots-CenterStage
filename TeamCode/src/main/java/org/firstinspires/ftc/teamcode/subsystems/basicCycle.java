@@ -50,7 +50,6 @@ public class basicCycle extends OpMode {
         telemetry = new MultipleTelemetry(telemetry, FtcDashboard.getInstance().getTelemetry());
         armmotor1 = hardwareMap.get(DcMotorEx.class, "leftSlides");
         armmotor2 = hardwareMap.get(DcMotorEx.class, "rightSlides");
-        armmotor2.setDirection(DcMotorSimple.Direction.REVERSE);
 
 
 

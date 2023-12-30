@@ -38,7 +38,6 @@ public class PIDControllerOpmode extends OpMode {
         telemetry = new MultipleTelemetry(telemetry, FtcDashboard.getInstance().getTelemetry());
         armmotor1 = hardwareMap.get(DcMotorEx.class, "leftSlides");
         armmotor2 = hardwareMap.get(DcMotorEx.class, "rightSlides");
-        armmotor2.setDirection(DcMotorSimple.Direction.REVERSE);
         count = 1;
         count2 = 1;
         time = 0;

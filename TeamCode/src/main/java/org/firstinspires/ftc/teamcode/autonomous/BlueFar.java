@@ -12,12 +12,14 @@ import com.acmerobotics.roadrunner.ParallelAction;
 import com.acmerobotics.roadrunner.Pose2d;
 import com.acmerobotics.roadrunner.SequentialAction;
 import com.acmerobotics.roadrunner.SleepAction;
+import org.firstinspires.ftc.robotcore.external.navigation.CurrentUnit;
 import com.acmerobotics.roadrunner.Vector2d;
 import com.acmerobotics.roadrunner.ftc.Actions;
 import com.arcrobotics.ftclib.controller.PIDController;
 import com.qualcomm.hardware.lynx.LynxModule;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
@@ -44,6 +46,7 @@ public class BlueFar extends LinearOpMode {
 
     public static double dumpTwoPosition = dumpInitPosition;
 
+
     public static String cameraPos = "MIDDLE";
     public static double f = 0.1;
     public int left_slides_pos;
@@ -53,13 +56,12 @@ public class BlueFar extends LinearOpMode {
     private BluePropThreshold bluePropThreshold; //Create an object of the VisionProcessor Class
     private VisionPortal portal;
 
-    private double targetPos = 0;
+    public static double targetPos = 0;
 
     @Override
 
     public void runOpMode() {
         targetPos = 0;
-
         List<LynxModule> allHubs = hardwareMap.getAll(LynxModule.class);
 
         for (LynxModule module : allHubs) {
@@ -79,6 +81,7 @@ public class BlueFar extends LinearOpMode {
                 hardwareMap.get(WebcamName.class, "Webcam 1"), bluePropThreshold);
         FtcDashboard.getInstance().startCameraStream(bluePropThreshold, 0);
         IntakeSystem intake = new IntakeSystem(hardwareMap);
+        Slide slides = new Slide(hardwareMap);
         LinearSlides linearSlides = new LinearSlides(hardwareMap);
         DropperSystem drop = new DropperSystem(hardwareMap);
 
@@ -99,6 +102,9 @@ public class BlueFar extends LinearOpMode {
                 .splineToConstantHeading(new Vector2d(-38, 10), Math.toRadians(0))
                 .splineTo(new Vector2d(20, 10), Math.toRadians(0))
                 .splineToSplineHeading(new Pose2d(53,38, Math.toRadians(180)), Math.toRadians(0))
+//                .stopAndAdd(slides.setTargetPosition(1200))
+
+
                 .build();
 
 
@@ -148,13 +154,20 @@ public class BlueFar extends LinearOpMode {
         }
 
 
+
+
         waitForStart();
 
         if (isStopRequested()) return;
         Actions.runBlocking(
-                new SequentialAction(
-                    mainTraj
-        ));
+                new ParallelAction(
+                        linearSlides.moveSlides(),
+                        new SequentialAction(
+                                linearSlides.setTargetPos(0),
+                                linearSlides.setTargetPos(1200)
+                        )
+                )
+          );
 //        Actions.runBlocking(new RaceParallelCommand(
 //                linearSlides.moveSlides(),
 //                new SequentialAction(
@@ -353,6 +366,107 @@ public class BlueFar extends LinearOpMode {
 
 
 
+    }
+
+    public static class Slide extends ControlledMotor {
+
+
+
+        /**
+         * This initializes the slide motor. This should be run before any other methods.
+         *
+         * @param hardwareMap The hardware map to use to get the motors.
+         */
+        public Slide(HardwareMap hardwareMap) {
+            leftSlides = hardwareMap.get(DcMotorEx.class, "leftSlides");
+            rightSlides = hardwareMap.get(DcMotorEx.class, "rightSlides");
+            leftSlides.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+            leftSlides.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+            rightSlides.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+            rightSlides.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+
+        }
+
+        /**
+         * This stops the slide, sets the state to down, sets the target to 0, and resets the encoder.
+         */
+        public void reset() {
+            targetPos = 0;
+            leftSlides.setPower(0);
+            leftSlides.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+            leftSlides.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+            rightSlides.setPower(0);
+            rightSlides.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+            rightSlide.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        }
+
+
+        /**
+         * This updates the slide motor to match the current state. This should be run in a loop.
+         */
+        public void update() {
+            // overly complex slide code
+            // obtain the encoder position and calculate the error
+            controllerLeft.setPID(Lp, Li, Ld);
+            controllerRight.setPID(Rp, Ri, Rd);
+            left_slides_pos = (leftSlides.getCurrentPosition());
+            right_slides_pos = (rightSlides.getCurrentPosition());
+            double leftPID = controllerLeft.calculate(left_slides_pos, targetPosition);
+            double rightPID = controllerRight.calculate(right_slides_pos, targetPosition);
+            double leftPower = leftPID + f;
+            double rightPower = rightPID + f;
+            leftSlides.setPower(leftPower);
+            rightSlides.setPower(rightPower);
+            telemetry.addData("Left Position",leftSlides.getCurrentPosition());
+            telemetry.addData("Right Position",rightSlides.getCurrentPosition());
+            telemetry.update();
+        }
+
+
+        public boolean closeEnough() {
+            return Math.abs(leftSlide.getCurrentPosition() - targetPosition) < 20;
+        }
+
+        public Action setTargetPosition(double position) {
+            return new Action() {
+                @Override
+                public boolean run(@NonNull TelemetryPacket t) {
+                    setTarget(position);
+                    return false;
+                }
+            };
+        }
+        public Action waitUntilFinished() {
+            return new Action() {
+                @Override
+                public boolean run(@NonNull TelemetryPacket t) {
+                    return closeEnough();
+                }
+            };
+        }
+
+
+
+    }
+
+
+    /**
+     * This class controls the claw.
+     */
+
+    public abstract static class ControlledMotor {
+        public DcMotorEx leftSlides;
+        public DcMotorEx rightSlides;
+        double targetPosition;
+        public double getTargetPosition() {
+            return targetPosition;
+        }
+        public void setTarget(double targetPosition) {
+            this.targetPosition = targetPosition;
+        }
+        public abstract void update();
+        public abstract void reset();
+        public abstract boolean closeEnough();
     }
 
     public static class RaceParallelCommand implements Action {
