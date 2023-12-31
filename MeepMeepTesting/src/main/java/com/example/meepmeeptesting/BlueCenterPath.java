@@ -20,14 +20,30 @@ public class BlueCenterPath {
                 .followTrajectorySequence(drive -> drive.trajectorySequenceBuilder(new Pose2d(-36, 62, Math.toRadians(270)))
 //                        .splineToConstantHeading(new Vector2d(-36, 35), Math.toRadians(270))
 //                        .build()
+
+                        /* Blue Far Center */
+//                                .setReversed(true)
+//                                .lineTo(new Vector2d(-36, 22))
+//                                .lineTo(new Vector2d(-36, 34))
+//                                .turn(Math.toRadians(-90))
+//                                .lineTo(new Vector2d(58,36))
+//                                .build()
+
+
+                        /* Blue Far Right */
                         .setReversed(true)
-                        .splineToSplineHeading(new Pose2d(-38,32, Math.toRadians(0)), Math.toRadians(-90))
+                        .lineTo(new Vector2d(-36, 34))
+                        .splineTo(new Vector2d(-44, 34), Math.toRadians(180))
+
                         .waitSeconds(0.5)
                         .setReversed(true)
                         .setTangent(0)
+//                .lineToY(20)
+
+
                         .splineToConstantHeading(new Vector2d(-38, 10), Math.toRadians(0))
                         .splineTo(new Vector2d(20, 10), Math.toRadians(0))
-                        .splineToSplineHeading(new Pose2d(53,41, Math.toRadians(180)), Math.toRadians(0))
+                        .splineToSplineHeading(new Pose2d(53,38, Math.toRadians(180)), Math.toRadians(0))
                         .build()
 
                 );

@@ -27,7 +27,9 @@ public class BlueLeftPath {
                                 .splineToConstantHeading(new Vector2d(56, 40), Math.toRadians(180))
                                         .build()
 
+
                 );
+
 
         RoadRunnerBotEntity my2Bot = new DefaultBotBuilder(meepMeep)
                 // Set bot constraints: maxVel, maxAccel, maxAngVel, maxAngAccel, track width
