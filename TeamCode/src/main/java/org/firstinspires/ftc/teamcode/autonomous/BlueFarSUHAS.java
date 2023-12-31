@@ -81,10 +81,10 @@ public class BlueFarSUHAS extends LinearOpMode {
 //                .lineToY(20)
                 .splineToConstantHeading(new Vector2d(-38, 10), Math.toRadians(0))
                 .splineTo(new Vector2d(20, 10), Math.toRadians(0))
-                .afterTime(0.5,  linearSlides.setTargetPosition(1500))
+                .afterTime(1,  linearSlides.setTargetPosition(1500))
                 .splineToSplineHeading(new Pose2d(56,35, Math.toRadians(180)), Math.toRadians(0))
                 .endTrajectory()
-                .stopAndAdd(new SequentialAction(dropper.dropDown(), new SleepAction(1.5), dropper.initPosition(), linearSlides.setTargetPosition(0), new SleepAction(1.5)))
+                .stopAndAdd(dropper.dropDown())
                 .build();
 
         Action mainTrajRight = drive.actionBuilder(startPose)
@@ -99,11 +99,12 @@ public class BlueFarSUHAS extends LinearOpMode {
                 .setTangent(0)
                 .splineToConstantHeading(new Vector2d(-38, 10), Math.toRadians(0))
                 .splineTo(new Vector2d(20, 10), Math.toRadians(0))
-                .afterTime(0.5,  linearSlides.setTargetPosition(1500))
+                .afterTime(1,  linearSlides.setTargetPosition(1500))
                 .splineToSplineHeading(new Pose2d(56,30, Math.toRadians(180)), Math.toRadians(0))
                 .endTrajectory()
                 .stopAndAdd(new SequentialAction(dropper.dropDown(), new SleepAction(1.5), dropper.initPosition(), linearSlides.setTargetPosition(0), new SleepAction(1.5)))
                 .build();
+
         Action mainTrajMiddle = drive.actionBuilder(startPose)
                 .setReversed(true)
                 .lineToY(45)
