@@ -25,9 +25,6 @@ public class TeleOpRoboCentric extends LinearOpMode {
     // TODO: PhotonFTC
 
     double speed;
-//    LynxModule CONTROL_H
-//    UB;
-//    LynxModule EXPANSION_HUB;
     final ElapsedTime loopTime = new ElapsedTime();
     boolean pixelInOuttake; //need to use later
     final Gamepad currentGamepad1 = new Gamepad();
@@ -65,20 +62,6 @@ public class TeleOpRoboCentric extends LinearOpMode {
 
     @Override
     public void runOpMode() {
-        //PhotonCore.enable();
-
-        //  Initialization Period
-
-        // Enable Performance Optimization
-
-        //PhotonCore.start(hardwareMap); // TODO: if somethings' wrong THIS IS WHY
-//        List<LynxModule> allHubs = hardwareMap.getAll(LynxModule.class);
-
-//        for (LynxModule module : allHubs) {
-//            module.setBulkCachingMode(LynxModule.BulkCachingMode.MANUAL);
-//        }
-//        CONTROL_HUB = allHubs.get(0);
-//       EXPANSION_HUB = allHubs.get(1);
 
         // Telemetry Init
         telemetry.setMsTransmissionInterval(50);
