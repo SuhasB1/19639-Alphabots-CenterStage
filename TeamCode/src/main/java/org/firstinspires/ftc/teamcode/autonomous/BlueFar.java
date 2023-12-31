@@ -37,8 +37,7 @@ import java.util.Vector;
 @Config
 public class BlueFar extends LinearOpMode {
 
-    LynxModule CONTROL_HUB;
-    LynxModule EXPANSION_HUB;
+
     public static double Lp = 0.015, Li = 0, Ld = 0.0003;
     public static double Rp = 0.015, Ri = 0, Rd = 0.0003;
     public static double dumpInitPosition = 0.15;
@@ -63,20 +62,14 @@ public class BlueFar extends LinearOpMode {
 
     public void runOpMode() throws IllegalArgumentException {
         targetPos = 0;
-        List<LynxModule> allHubs = hardwareMap.getAll(LynxModule.class);
 
-        for (LynxModule module : allHubs) {
-            module.setBulkCachingMode(LynxModule.BulkCachingMode.AUTO);
-        }
-        CONTROL_HUB = allHubs.get(0);
-        EXPANSION_HUB = allHubs.get(1);
 
         // Telemetry Init
         telemetry.setMsTransmissionInterval(50);
         telemetry = new MultipleTelemetry(telemetry, FtcDashboard.getInstance().getTelemetry());
         controllerLeft = new PIDController(Lp, Li, Ld);
         controllerRight = new PIDController(Rp, Ri, Rd);
-        MecanumDrive drive = new MecanumDrive(hardwareMap, new Pose2d(-36, 59, Math.toRadians(270)));
+        MecanumDrive drive = new MecanumDrive(hardwareMap, new Pose2d(-36, 62, Math.toRadians(270)));
         bluePropThreshold = new BluePropThreshold();
         portal = VisionPortal.easyCreateWithDefaults(
                 hardwareMap.get(WebcamName.class, "Webcam 1"), bluePropThreshold);
@@ -85,7 +78,7 @@ public class BlueFar extends LinearOpMode {
 
         DropperSystem drop = new DropperSystem(hardwareMap);
 
-        Pose2d startPose = new Pose2d(-36,62,Math.toRadians(-90));
+        Pose2d startPose = new Pose2d(-36,62,Math.toRadians(270));
         // Delcare Trajectory as such
         Action mainTrajLeft = drive.actionBuilder(startPose)
                 .setReversed(true)
@@ -96,40 +89,38 @@ public class BlueFar extends LinearOpMode {
                 .stopAndAdd(intake.idle())
                 .setReversed(true)
                 .setTangent(0)
-//                .lineToY(20)
-
-
                 .splineToConstantHeading(new Vector2d(-38, 10), Math.toRadians(0))
                 .splineTo(new Vector2d(20, 10), Math.toRadians(0))
                 .splineToSplineHeading(new Pose2d(56,35, Math.toRadians(180)), Math.toRadians(0))
-//                .stopAndAdd(slides.setTargetPosition(1200))
-
+                .endTrajectory()
 
                 .build();
 
         Action mainTrajRight = drive.actionBuilder(startPose)
                 .setReversed(true)
-                .lineToY(34)
+                .strafeTo(new Vector2d(-36, 34))
                 .splineTo(new Vector2d(-38, 32), Math.toRadians(180)) //-38
 
                 .waitSeconds(0.5)
-                .lineToX(-36)
+                .strafeTo(new Vector2d(-36, 32))
                 .setReversed(true)
                 .setTangent(0)
 
 
                 .splineToConstantHeading(new Vector2d(-38, 10), Math.toRadians(0))
                 .splineTo(new Vector2d(20, 10), Math.toRadians(0))
-                .splineToSplineHeading(new Pose2d(57,24.5, Math.toRadians(180)), Math.toRadians(0)) //34.5
+                .splineToSplineHeading(new Pose2d(57,26, Math.toRadians(180)), Math.toRadians(0)) //34.5
+                .endTrajectory()
                 .build();
 
 
 
         Action mainTrajMiddle = drive.actionBuilder(startPose)
                 .setReversed(true)
-                .lineToY(30)
+                .strafeTo(new Vector2d(-36, 30))
                 .splineToSplineHeading(new Pose2d(-36, 34, Math.toRadians(180)), Math.toRadians(270))
                 .strafeTo(new Vector2d(58, 36))
+                .endTrajectory()
                 .build();
 
 
@@ -140,7 +131,6 @@ public class BlueFar extends LinearOpMode {
 
 
         while (!isStopRequested() && !opModeIsActive()) {
-            allHubs.forEach(LynxModule::clearBulkCache);
 
             telemetry.addData("position", bluePropThreshold.getPropPosition());
             telemetry.update();
@@ -154,7 +144,7 @@ public class BlueFar extends LinearOpMode {
         if (isStopRequested()) return;
         Actions.runBlocking(
                 new SequentialAction(
-                        mainTrajLeft
+                        mainTrajRight
 
 
                 )

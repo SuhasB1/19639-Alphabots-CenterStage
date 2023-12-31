@@ -22,23 +22,29 @@ public class BlueCenterPath {
 //                        .build()
 
                         /* Blue Far Center */
-                                .setReversed(true)
-                                .lineTo(new Vector2d(-36, 30))
-
-                                .splineToSplineHeading(new Pose2d(-36, 34, Math.toRadians(180)), Math.toRadians(270))
-                                .lineTo(new Vector2d(58,36))
-                                .build()
+//                                .setReversed(true)
+//                                .lineTo(new Vector2d(-36, 30))
+//
+//                                .splineToSplineHeading(new Pose2d(-36, 34, Math.toRadians(180)), Math.toRadians(270))
+//                                .lineTo(new Vector2d(58,36))
+//                                .build()
 
 
                         /* Blue Far Right */
-//                        .setReversed(true)
-//                        .lineTo(new Vector2d(-36, 34))
-//                        .splineTo(new Vector2d(-44, 34), Math.toRadians(180))
-//
-//                        .waitSeconds(0.5)
-//                        .setReversed(true)
-//                        .setTangent(0)
-//                .lineToY(20)
+                                .setReversed(true)
+                                .strafeTo(new Vector2d(-36, 34))
+                                .splineTo(new Vector2d(-38, 32), Math.toRadians(180)) //-38
+
+                                .waitSeconds(0.5)
+                                .strafeTo(new Vector2d(-36, 32))
+                                .setReversed(true)
+                                .setTangent(0)
+
+
+                                .splineToConstantHeading(new Vector2d(-38, 10), Math.toRadians(0))
+                                .splineTo(new Vector2d(20, 10), Math.toRadians(0))
+                                .splineToSplineHeading(new Pose2d(57,26, Math.toRadians(180)), Math.toRadians(0)) //34.5
+                                .build()
 
 
 //                        .splineToConstantHeading(new Vector2d(-38, 10), Math.toRadians(0))
