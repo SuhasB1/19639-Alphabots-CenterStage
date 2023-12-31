@@ -90,20 +90,22 @@ public class BlueFarSUHAS extends LinearOpMode {
         Action mainTrajRight = drive.actionBuilder(startPose)
                 .setReversed(true)
                 .lineToY(34)
-                .splineTo(new Vector2d(-44, 32), Math.toRadians(180))
+                .splineTo(new Vector2d(-38, 32), Math.toRadians(180)) //-38
                 .endTrajectory()
                 .waitSeconds(0.5)
                 .stopAndAdd(intake.idle())
                 .setReversed(true)
                 .lineToX(-36)
                 .setTangent(0)
+                .afterTime(1,  linearSlides.setTargetPosition(1500))
+
                 .splineToConstantHeading(new Vector2d(-38, 10), Math.toRadians(0))
                 .splineTo(new Vector2d(20, 10), Math.toRadians(0))
-                .afterTime(1,  linearSlides.setTargetPosition(1500))
-                .splineToSplineHeading(new Pose2d(56,30, Math.toRadians(180)), Math.toRadians(0))
+                .splineToSplineHeading(new Pose2d(57,24.5, Math.toRadians(180)), Math.toRadians(0)) //34.5
                 .endTrajectory()
                 .stopAndAdd(new SequentialAction(dropper.dropDown(), new SleepAction(1.5), dropper.initPosition(), linearSlides.setTargetPosition(0), new SleepAction(1.5)))
                 .build();
+
 
         Action mainTrajMiddle = drive.actionBuilder(startPose)
                 .setReversed(true)
