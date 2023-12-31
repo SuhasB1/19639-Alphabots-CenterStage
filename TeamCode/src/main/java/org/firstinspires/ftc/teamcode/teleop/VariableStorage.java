@@ -9,8 +9,12 @@ import com.acmerobotics.roadrunner.Pose2d;
  * A static field allows data to persist between opmodes.
  */
 @Config
-public class PoseStorage {
+public class VariableStorage {
     public static Pose2d currentPose = new Pose2d(0,0,Math.toRadians(-90));
+
+    public static int leftLinearSlidesPos = 0;
+    public static int rightLinearSlidesPos = 0;
+    public static double dumperPos = 0.17;
     public static Team currentTeam = Team.BLUE;
     public enum Team {
         BLUE, RED

@@ -85,10 +85,18 @@ public class TeleOpRoboCentric extends LinearOpMode {
         dumpServo1.setPosition(dumpInitPosition);
         dumpServo2.setPosition(dumpInitPosition);
 
+        if(Math.abs(VariableStorage.leftLinearSlidesPos) > 20 || Math.abs(VariableStorage.rightLinearSlidesPos) > 20){
+            vertPIDController(0);
+        }
+        if(VariableStorage.dumperPos != dumpInitPosition){
+            dumpServo1.setPosition(dumpInitPosition);
+            dumpServo2.setPosition(dumpInitPosition);
+        }
+
         targetPos = 0;
         intakePower = 0;
 
-        MecanumDrive drive = new MecanumDrive(hardwareMap, PoseStorage.currentPose);
+        MecanumDrive drive = new MecanumDrive(hardwareMap, VariableStorage.currentPose);
 
         waitForStart();
 

@@ -8,29 +8,24 @@ import com.acmerobotics.dashboard.config.Config;
 import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
 import com.acmerobotics.dashboard.telemetry.TelemetryPacket;
 import com.acmerobotics.roadrunner.Action;
-import com.acmerobotics.roadrunner.ParallelAction;
 import com.acmerobotics.roadrunner.Pose2d;
 import com.acmerobotics.roadrunner.SequentialAction;
 import com.acmerobotics.roadrunner.SleepAction;
-import org.firstinspires.ftc.robotcore.external.navigation.CurrentUnit;
 import com.acmerobotics.roadrunner.Vector2d;
 import com.acmerobotics.roadrunner.ftc.Actions;
 import com.arcrobotics.ftclib.controller.PIDController;
-import com.qualcomm.hardware.lynx.LynxModule;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
-import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
 import org.firstinspires.ftc.teamcode.roadrunner.MecanumDrive;
+import org.firstinspires.ftc.teamcode.teleop.VariableStorage;
 import org.firstinspires.ftc.teamcode.vision.BluePropThreshold;
 import org.firstinspires.ftc.vision.VisionPortal;
-
-import java.util.List;
 
 @Autonomous(name="BlueFarSuhas")
 @Config
@@ -85,11 +80,11 @@ public class BlueFarSUHAS extends LinearOpMode {
                 .setTangent(0)
 //                .lineToY(20)
                 .splineToConstantHeading(new Vector2d(-38, 10), Math.toRadians(0))
-                .afterTime(0.75,  linearSlides.setTargetPosition(1500))
                 .splineTo(new Vector2d(20, 10), Math.toRadians(0))
+                .afterTime(0.5,  linearSlides.setTargetPosition(1500))
                 .splineToSplineHeading(new Pose2d(56,35, Math.toRadians(180)), Math.toRadians(0))
                 .endTrajectory()
-                .stopAndAdd(new SequentialAction(dropper.dropDown(), new SleepAction(1.5), dropper.initPosition(), linearSlides.setTargetPosition(0), linearSlides.waitUntilFinished()))
+                .stopAndAdd(new SequentialAction(dropper.dropDown(), new SleepAction(1.5), dropper.initPosition(), linearSlides.setTargetPosition(0), new SleepAction(1.5)))
                 .build();
 
         Action mainTrajRight = drive.actionBuilder(startPose)
@@ -103,11 +98,11 @@ public class BlueFarSUHAS extends LinearOpMode {
                 .lineToX(-36)
                 .setTangent(0)
                 .splineToConstantHeading(new Vector2d(-38, 10), Math.toRadians(0))
-                .afterTime(0.75,  linearSlides.setTargetPosition(1500))
                 .splineTo(new Vector2d(20, 10), Math.toRadians(0))
+                .afterTime(0.5,  linearSlides.setTargetPosition(1500))
                 .splineToSplineHeading(new Pose2d(56,30, Math.toRadians(180)), Math.toRadians(0))
                 .endTrajectory()
-                .stopAndAdd(new SequentialAction(dropper.dropDown(), new SleepAction(1.5), dropper.initPosition(), linearSlides.setTargetPosition(0), linearSlides.waitUntilFinished()))
+                .stopAndAdd(new SequentialAction(dropper.dropDown(), new SleepAction(1.5), dropper.initPosition(), linearSlides.setTargetPosition(0), new SleepAction(1.5)))
                 .build();
         Action mainTrajMiddle = drive.actionBuilder(startPose)
                 .setReversed(true)
@@ -118,13 +113,13 @@ public class BlueFarSUHAS extends LinearOpMode {
                 .stopAndAdd(intake.idle())
                 .setReversed(true)
                 .setTangent(0)
-//                .lineToY(20)
+//              .lineToY(20)
                 .splineToConstantHeading(new Vector2d(-38, 10), Math.toRadians(0))
-                .afterTime(0.75,  linearSlides.setTargetPosition(1500))
                 .splineTo(new Vector2d(20, 10), Math.toRadians(0))
+                .afterTime(0.5,  linearSlides.setTargetPosition(1500))
                 .splineToSplineHeading(new Pose2d(56,35, Math.toRadians(180)), Math.toRadians(0))
                 .endTrajectory()
-                .stopAndAdd(new SequentialAction(dropper.dropDown(), new SleepAction(1.5), dropper.initPosition(), linearSlides.setTargetPosition(0), linearSlides.waitUntilFinished()))
+                .stopAndAdd(new SequentialAction(dropper.dropDown(), new SleepAction(1.5), dropper.initPosition(), linearSlides.setTargetPosition(0), new SleepAction(1.5)))
                 .build();
 
         while (!isStopRequested() && !opModeIsActive()) {
@@ -149,7 +144,12 @@ public class BlueFarSUHAS extends LinearOpMode {
                     linearSlides.update()
             ));
         }
-
+        VariableStorage.leftLinearSlidesPos = linearSlides.leftSlides.getCurrentPosition();
+        VariableStorage.rightLinearSlidesPos = linearSlides.leftSlides.getCurrentPosition();
+        VariableStorage.dumperPos = dropper.dumpServo1.getPosition();
+        telemetry.addData("left",  linearSlides.leftSlides.getCurrentPosition());
+        telemetry.addData("right",  linearSlides.rightSlides.getCurrentPosition());
+        telemetry.addData("dumper pos", dropper.dumpServo1.getPosition());
         if (isStopRequested()) return;
 
     }
