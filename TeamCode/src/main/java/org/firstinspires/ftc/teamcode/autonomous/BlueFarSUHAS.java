@@ -32,7 +32,7 @@ import org.firstinspires.ftc.vision.VisionPortal;
 
 import java.util.List;
 
-@Autonomous(name="BlueFar")
+@Autonomous(name="BlueFarSuhas")
 @Config
 public class BlueFarSUHAS extends LinearOpMode {
     public static double Lp = 0.015, Li = 0, Ld = 0.0003;
@@ -70,20 +70,11 @@ public class BlueFarSUHAS extends LinearOpMode {
         IntakeSystem intake = new IntakeSystem(hardwareMap);
         LinearSlides linearSlides = new LinearSlides(hardwareMap);
         DropperSystem dropper = new DropperSystem(hardwareMap);
-        cameraPos = "MIDDLE";
-
         Pose2d startPose = new Pose2d(-36,62,Math.toRadians(-90));
         // Delcare Trajectory as such
-        Action placePixel =
-                new SequentialAction(
-                        telemetryPacket -> {linearSlides.setTargetPosition(1500); return false;},
-                        telemetryPacket -> {linearSlides.waitUntilFinished(); return linearSlides.closeEnough();},
-                        telemetryPacket -> {dropper.dropDown(); return false;},
-                        new SleepAction(1.5),
-                        telemetryPacket -> {dropper.initPosition(); return false;},
-                        telemetryPacket -> {linearSlides.setTargetPosition(0); return false;}
-                );
-        Action trajLeft = drive.actionBuilder(startPose)
+        Action mainTraj = null;
+
+        Action mainTrajLeft = drive.actionBuilder(startPose)
                 .setReversed(true)
                 .lineToY(45)
                 .splineToSplineHeading(new Pose2d(-38,32, Math.toRadians(0)), Math.toRadians(-90))
@@ -96,44 +87,72 @@ public class BlueFarSUHAS extends LinearOpMode {
                 .splineToConstantHeading(new Vector2d(-38, 10), Math.toRadians(0))
                 .afterTime(0.75,  linearSlides.setTargetPosition(1500))
                 .splineTo(new Vector2d(20, 10), Math.toRadians(0))
-                .splineToSplineHeading(new Pose2d(53,38, Math.toRadians(180)), Math.toRadians(0))
+                .splineToSplineHeading(new Pose2d(56,35, Math.toRadians(180)), Math.toRadians(0))
                 .endTrajectory()
-                .stopAndAdd(new SequentialAction(dropper.dropDown(), new SleepAction(1.5), dropper.initPosition(), linearSlides.setTargetPosition(0)))
+                .stopAndAdd(new SequentialAction(dropper.dropDown(), new SleepAction(1.5), dropper.initPosition(), linearSlides.setTargetPosition(0), linearSlides.waitUntilFinished()))
                 .build();
 
-        waitForStart();
+        Action mainTrajRight = drive.actionBuilder(startPose)
+                .setReversed(true)
+                .lineToY(34)
+                .splineTo(new Vector2d(-44, 32), Math.toRadians(180))
+                .endTrajectory()
+                .waitSeconds(0.5)
+                .stopAndAdd(intake.idle())
+                .setReversed(true)
+                .lineToX(-36)
+                .setTangent(0)
+                .splineToConstantHeading(new Vector2d(-38, 10), Math.toRadians(0))
+                .afterTime(0.75,  linearSlides.setTargetPosition(1500))
+                .splineTo(new Vector2d(20, 10), Math.toRadians(0))
+                .splineToSplineHeading(new Pose2d(56,30, Math.toRadians(180)), Math.toRadians(0))
+                .endTrajectory()
+                .stopAndAdd(new SequentialAction(dropper.dropDown(), new SleepAction(1.5), dropper.initPosition(), linearSlides.setTargetPosition(0), linearSlides.waitUntilFinished()))
+                .build();
+        Action mainTrajMiddle = drive.actionBuilder(startPose)
+                .setReversed(true)
+                .lineToY(45)
+                .splineToSplineHeading(new Pose2d(-38,32, Math.toRadians(0)), Math.toRadians(-90))
+                .endTrajectory()
+                .waitSeconds(0.5)
+                .stopAndAdd(intake.idle())
+                .setReversed(true)
+                .setTangent(0)
+//                .lineToY(20)
+                .splineToConstantHeading(new Vector2d(-38, 10), Math.toRadians(0))
+                .afterTime(0.75,  linearSlides.setTargetPosition(1500))
+                .splineTo(new Vector2d(20, 10), Math.toRadians(0))
+                .splineToSplineHeading(new Pose2d(56,35, Math.toRadians(180)), Math.toRadians(0))
+                .endTrajectory()
+                .stopAndAdd(new SequentialAction(dropper.dropDown(), new SleepAction(1.5), dropper.initPosition(), linearSlides.setTargetPosition(0), linearSlides.waitUntilFinished()))
+                .build();
+
+        while (!isStopRequested() && !opModeIsActive()) {
+            telemetry.addData("position", bluePropThreshold.getPropPosition());
+            telemetry.update();
+        }
+        cameraPos = bluePropThreshold.getPropPosition();
+
+        if (cameraPos.equalsIgnoreCase("LEFT")){
+            Actions.runBlocking(new RaceParallelCommand(
+                    mainTrajLeft,
+                    linearSlides.update()
+            ));
+        }else if(cameraPos.equalsIgnoreCase("MIDDLE")){
+            Actions.runBlocking(new RaceParallelCommand(
+                    mainTrajMiddle,
+                    linearSlides.update()
+            ));
+        }else{
+            Actions.runBlocking(new RaceParallelCommand(
+                    mainTrajRight,
+                    linearSlides.update()
+            ));
+        }
 
         if (isStopRequested()) return;
 
-        Actions.runBlocking(new RaceParallelCommand(
-                trajLeft,
-                linearSlides.update()
-        ));
-
     }
-
-
-
-    public Action runTrajectory(Action trajLeft, Action trajRight, Action trajCenter) {
-        switch (cameraPos) {
-
-            case "LEFT":
-                return trajLeft;
-
-
-            case "RIGHT":
-                return trajRight;
-
-
-            case "MIDDLE":
-                return trajCenter;
-
-        }
-        return trajCenter;
-    }
-
-
-
     public class DropperSystem {
 
         Servo dumpServo1;
