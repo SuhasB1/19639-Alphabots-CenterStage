@@ -31,6 +31,7 @@ import org.firstinspires.ftc.teamcode.vision.BluePropThreshold;
 import org.firstinspires.ftc.vision.VisionPortal;
 
 import java.util.List;
+import java.util.Vector;
 
 @Autonomous(name="BlueFar")
 @Config
@@ -60,7 +61,7 @@ public class BlueFar extends LinearOpMode {
 
     @Override
 
-    public void runOpMode() {
+    public void runOpMode() throws IllegalArgumentException {
         targetPos = 0;
         List<LynxModule> allHubs = hardwareMap.getAll(LynxModule.class);
 
@@ -109,7 +110,7 @@ public class BlueFar extends LinearOpMode {
         Action mainTrajRight = drive.actionBuilder(startPose)
                 .setReversed(true)
                 .lineToY(34)
-                .splineTo(new Vector2d(-44, 32), Math.toRadians(180))
+                .splineTo(new Vector2d(-38, 32), Math.toRadians(180)) //-38
 
                 .waitSeconds(0.5)
                 .lineToX(-36)
@@ -119,19 +120,17 @@ public class BlueFar extends LinearOpMode {
 
                 .splineToConstantHeading(new Vector2d(-38, 10), Math.toRadians(0))
                 .splineTo(new Vector2d(20, 10), Math.toRadians(0))
-                .splineToSplineHeading(new Pose2d(56,30, Math.toRadians(180)), Math.toRadians(0))
+                .splineToSplineHeading(new Pose2d(57,24.5, Math.toRadians(180)), Math.toRadians(0)) //34.5
                 .build();
 
 
 
-//        Action mainTrajMiddle = drive.actionBuilder(startPose)
-//                .setReversed(true)
-//                .lineToYConstantHeading(22)
-//                .waitSeconds(500)
-//                .lineToY(34)
-//                .waitSeconds(500)
-//                .lineToX(58)
-//                .build();
+        Action mainTrajMiddle = drive.actionBuilder(startPose)
+                .setReversed(true)
+                .lineToY(30)
+                .splineToSplineHeading(new Pose2d(-36, 34, Math.toRadians(180)), Math.toRadians(270))
+                .strafeTo(new Vector2d(58, 36))
+                .build();
 
 
 
@@ -155,7 +154,8 @@ public class BlueFar extends LinearOpMode {
         if (isStopRequested()) return;
         Actions.runBlocking(
                 new SequentialAction(
-                        mainTrajRight
+                        mainTrajLeft
+
 
                 )
         );

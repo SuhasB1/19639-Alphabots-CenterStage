@@ -22,29 +22,29 @@ public class BlueCenterPath {
 //                        .build()
 
                         /* Blue Far Center */
-//                                .setReversed(true)
-//                                .lineTo(new Vector2d(-36, 22))
-//                                .lineTo(new Vector2d(-36, 34))
-//                                .turn(Math.toRadians(-90))
-//                                .lineTo(new Vector2d(58,36))
-//                                .build()
+                                .setReversed(true)
+                                .lineTo(new Vector2d(-36, 30))
+
+                                .splineToSplineHeading(new Pose2d(-36, 34, Math.toRadians(180)), Math.toRadians(270))
+                                .lineTo(new Vector2d(58,36))
+                                .build()
 
 
                         /* Blue Far Right */
-                        .setReversed(true)
-                        .lineTo(new Vector2d(-36, 34))
-                        .splineTo(new Vector2d(-44, 34), Math.toRadians(180))
-
-                        .waitSeconds(0.5)
-                        .setReversed(true)
-                        .setTangent(0)
+//                        .setReversed(true)
+//                        .lineTo(new Vector2d(-36, 34))
+//                        .splineTo(new Vector2d(-44, 34), Math.toRadians(180))
+//
+//                        .waitSeconds(0.5)
+//                        .setReversed(true)
+//                        .setTangent(0)
 //                .lineToY(20)
 
 
-                        .splineToConstantHeading(new Vector2d(-38, 10), Math.toRadians(0))
-                        .splineTo(new Vector2d(20, 10), Math.toRadians(0))
-                        .splineToSplineHeading(new Pose2d(53,38, Math.toRadians(180)), Math.toRadians(0))
-                        .build()
+//                        .splineToConstantHeading(new Vector2d(-38, 10), Math.toRadians(0))
+//                        .splineTo(new Vector2d(20, 10), Math.toRadians(0))
+//                        .splineToSplineHeading(new Pose2d(53,38, Math.toRadians(180)), Math.toRadians(0))
+//                        .build()
 
                 );
         meepMeep.setBackground(MeepMeep.Background.FIELD_CENTERSTAGE_JUICE_DARK)
