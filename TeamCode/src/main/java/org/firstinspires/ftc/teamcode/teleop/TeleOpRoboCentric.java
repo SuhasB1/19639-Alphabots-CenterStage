@@ -38,9 +38,9 @@ public class TeleOpRoboCentric extends LinearOpMode {
     DcMotorEx intakeMotor;
     Servo dumpServo1;
     Servo dumpServo2;
-    public static double dumpInitPosition = 0.17;
+    public static double dumpInitPosition = 0.65;
 
-    public static double dumpPosition = 0.64;
+    public static double dumpPosition = 0.95;
     //0.17 for starting
     //0.64 for first height
     //0.666 for second height (2700)
@@ -104,6 +104,7 @@ public class TeleOpRoboCentric extends LinearOpMode {
 
 
         // Run Period
+
 
         while (opModeIsActive() && !isStopRequested()) {
             loopTime.reset();

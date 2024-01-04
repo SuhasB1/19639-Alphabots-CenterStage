@@ -20,15 +20,42 @@ public class BlueClosePath {
                 .followTrajectorySequence(drive -> drive.trajectorySequenceBuilder(new Pose2d(12, 62, Math.toRadians(270)))
 //                        .splineToConstantHeading(new Vector2d(-36, 35), Math.toRadians(270))
 //                        .build()
-                                .setReversed(true)
-                                .lineTo(new Vector2d(12, 36))
-                                .waitSeconds(0.5)
-                                .setReversed(true)
-                                .setTangent(0)
-                                .splineToConstantHeading(new Vector2d(-38, 10), Math.toRadians(0))
-                                .splineTo(new Vector2d(20, 10), Math.toRadians(0))
-                                .splineToSplineHeading(new Pose2d(53,41, Math.toRadians(180)), Math.toRadians(0))
-                                .build()
+                                /* Blue Far Center */
+//                                .setReversed(true)
+//                                .strafeTo(new Vector2d(12, 30))
+//                                .strafeTo(new Vector2d(12, 27))
+//                                .splineToSplineHeading(new Pose2d(12, 34, Math.toRadians(180)), Math.toRadians(270))
+//                                .strafeTo(new Vector2d(56,36))
+//                                .build()
+
+//
+//                        /* Blue Far Right */
+////
+//
+//                                .setReversed(true)
+//                                .strafeTo(new Vector2d(12 ,45))
+//                                .splineToSplineHeading(new Pose2d(12,32, Math.toRadians(180)), Math.toRadians(-90))
+//                                .strafeTo(new Vector2d(56, 32))
+////                                .setReversed(true)
+////                                .setTangent(0)
+////                                .splineToConstantHeading(new Vector2d(12, 10), Math.toRadians(0))
+////                                .splineTo(new Vector2d(20, 10), Math.toRadians(0))
+////                                .splineToSplineHeading(new Pose2d(56,35, Math.toRadians(180)), Math.toRadians(0))
+//                                .build()
+
+
+
+                        // Blue Close Left
+                        .strafeTo(new Vector2d(12,45))
+                        .splineToSplineHeading(new Pose2d(12,32, Math.toRadians(0)), Math.toRadians(-90))
+                        .waitSeconds(0.5)
+                        .setReversed(true)
+                        .setTangent(0)
+                        .splineToConstantHeading(new Vector2d(12, 10), Math.toRadians(0))
+                        .splineTo(new Vector2d(20, 10), Math.toRadians(0))
+                        .splineToSplineHeading(new Pose2d(56,35, Math.toRadians(180)), Math.toRadians(0))
+
+                        .build()
 
                 );
         meepMeep.setBackground(MeepMeep.Background.FIELD_CENTERSTAGE_JUICE_DARK)

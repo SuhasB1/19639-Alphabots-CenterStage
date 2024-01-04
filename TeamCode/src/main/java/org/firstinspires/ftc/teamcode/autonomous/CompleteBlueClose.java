@@ -9,8 +9,6 @@ import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
 import com.acmerobotics.dashboard.telemetry.TelemetryPacket;
 import com.acmerobotics.roadrunner.Action;
 import com.acmerobotics.roadrunner.Pose2d;
-import com.acmerobotics.roadrunner.SequentialAction;
-import com.acmerobotics.roadrunner.SleepAction;
 import com.acmerobotics.roadrunner.Vector2d;
 import com.acmerobotics.roadrunner.ftc.Actions;
 import com.arcrobotics.ftclib.controller.PIDController;
@@ -27,16 +25,14 @@ import org.firstinspires.ftc.teamcode.teleop.VariableStorage;
 import org.firstinspires.ftc.teamcode.vision.BluePropThreshold;
 import org.firstinspires.ftc.vision.VisionPortal;
 
-import java.util.Vector;
-
-@Autonomous(name="BlueFarSuhas")
+@Autonomous(name="CompleteBlueClose")
 @Config
-public class BlueFarSUHAS extends LinearOpMode {
+public class CompleteBlueClose extends LinearOpMode {
     public static double Lp = 0.015, Li = 0, Ld = 0.0003;
     public static double Rp = 0.015, Ri = 0, Rd = 0.0003;
-    public static double dumpInitPosition = 0.17;
+    public static double dumpInitPosition = 0.65;
 
-    public static double dumpPosition = 0.53;
+    public static double dumpPosition = 0.95;
     //1200 ticks
 
     public static String cameraPos = "MIDDLE";
@@ -59,7 +55,7 @@ public class BlueFarSUHAS extends LinearOpMode {
         telemetry = new MultipleTelemetry(telemetry, FtcDashboard.getInstance().getTelemetry());
         controllerLeft = new PIDController(Lp, Li, Ld);
         controllerRight = new PIDController(Rp, Ri, Rd);
-        MecanumDrive drive = new MecanumDrive(hardwareMap, new Pose2d(-36, 59, Math.toRadians(270)));
+        MecanumDrive drive = new MecanumDrive(hardwareMap, new Pose2d(12, 62, Math.toRadians(270)));
         bluePropThreshold = new BluePropThreshold();
         portal = VisionPortal.easyCreateWithDefaults(
                 hardwareMap.get(WebcamName.class, "Webcam 1"), bluePropThreshold);
@@ -67,113 +63,69 @@ public class BlueFarSUHAS extends LinearOpMode {
         IntakeSystem intake = new IntakeSystem(hardwareMap);
         LinearSlides linearSlides = new LinearSlides(hardwareMap);
         DropperSystem dropper = new DropperSystem(hardwareMap);
-        Pose2d startPose = new Pose2d(-36,62,Math.toRadians(-90));
+        Pose2d startPose = new Pose2d(12,62,Math.toRadians(270));
         // Delcare Trajectory as such
         Action mainTraj = null;
 
         Action mainTrajLeft = drive.actionBuilder(startPose)
                 .setReversed(true)
-                .lineToY(45)
-                .splineToSplineHeading(new Pose2d(-38,32, Math.toRadians(0)), Math.toRadians(-90))
+                .strafeTo(new Vector2d(12,45))
+                .splineToSplineHeading(new Pose2d(12,32, Math.toRadians(0)), Math.toRadians(-90))
                 .endTrajectory()
                 .stopAndAdd(intake.idle())
                 .setReversed(true)
                 .setTangent(0)
-                .splineToConstantHeading(new Vector2d(-38, 10), Math.toRadians(0))
+                .splineToConstantHeading(new Vector2d(12, 10), Math.toRadians(0))
                 .splineTo(new Vector2d(20, 10), Math.toRadians(0))
-                .afterTime(1,  linearSlides.setTargetPosition(1500))
-                .splineToSplineHeading(new Pose2d(56,35, Math.toRadians(180)), Math.toRadians(0))
+                .afterTime(1,  linearSlides.setTargetPosition(600))
+                .splineToSplineHeading(new Pose2d(56,43, Math.toRadians(180)), Math.toRadians(0))
                 .endTrajectory()
                 .stopAndAdd(dropper.dropDown())
                 .waitSeconds(0.75)
-                .stopAndAdd(linearSlides.setTargetPosition(1700))
+                .stopAndAdd(linearSlides.setTargetPosition(800))
                 .waitSeconds(0.5)
                 .stopAndAdd(dropper.initPosition())
                 .waitSeconds(0.25)
-                .strafeTo(new Vector2d(45, 35))
                 .stopAndAdd(linearSlides.setTargetPosition(0))
-                .strafeTo(new Vector2d(45, 50))
-                .strafeTo(new Vector2d(66, 60))
-
-
+                .waitSeconds(0.5)
                 .build();
+
 
         Action mainTrajRight = drive.actionBuilder(startPose)
-              //  .setReversed(true)
-              //  .lineToY(34)
-             //   .splineTo(new Vector2d(-38, 32), Math.toRadians(180)) //-38
-//                .endTrajectory()
-//                .waitSeconds(0.5)
-//                .stopAndAdd(intake.idle())
-           /*     .setReversed(true)
-                .lineToX(-36)
-                .setTangent(0)
-                .afterTime(1,  linearSlides.setTargetPosition(1500))
-                .splineToConstantHeading(new Vector2d(-38, 10), Math.toRadians(0))
-                .splineTo(new Vector2d(20, 10), Math.toRadians(0))
-                .splineToSplineHeading(new Pose2d(57,24.5, Math.toRadians(180)), Math.toRadians(0)) //34.5
-//                .endTrajectory()
-//                .stopAndAdd(dropper.dropDown())
-//                .endTrajectory()
-//                .waitSeconds(1.5)
-//                .stopAndAdd(dropper.initPosition())
-//                .endTrajectory()
-//                .stopAndAdd(linearSlides.setTargetPosition(0))
-//                .endTrajectory()
-//                .stopAndAdd(linearSlides.waitUntilFinished())
-                .build();
-*/
                 .setReversed(true)
-                .strafeTo(new Vector2d(-36, 34))
-                .splineTo(new Vector2d(-39, 32), Math.toRadians(180)) //-38
-                .endTrajectory()
-                .waitSeconds(0.5)
-                .stopAndAdd(intake.idle())
-                .setReversed(true)
-
-
-                .waitSeconds(0.5)
-                .strafeTo(new Vector2d(-35, 32))
-
-
-
-                .splineToConstantHeading(new Vector2d(-38, 10), Math.toRadians(0))
-                .setReversed(true)
-                .setTangent(0)
-                .afterTime(1,  linearSlides.setTargetPosition(1500))
-
-                .splineTo(new Vector2d(20, 10), Math.toRadians(0))
-                .splineToSplineHeading(new Pose2d(57,26, Math.toRadians(180)), Math.toRadians(0)) //34.5
+                .strafeTo(new Vector2d(12 ,45))
+                .splineToSplineHeading(new Pose2d(9.5,32, Math.toRadians(180)), Math.toRadians(-90))
+                .afterTime(1,  linearSlides.setTargetPosition(600))
+                .strafeTo(new Vector2d(56, 31))
                 .endTrajectory()
                 .stopAndAdd(dropper.dropDown())
-//                .endTrajectory()
+                .waitSeconds(0.75)
+                .stopAndAdd(linearSlides.setTargetPosition(800))
+                .waitSeconds(0.5)
+                .stopAndAdd(dropper.initPosition())
+                .waitSeconds(0.25)
+                .stopAndAdd(linearSlides.setTargetPosition(0))
+                .waitSeconds(0.5)
                 .build();
 
-//        Action mainTrajMiddle = drive.actionBuilder(startPose)
-//                .setReversed(true)
-//                .lineToY(45)
-//                .splineToSplineHeading(new Pose2d(-38,32, Math.toRadians(0)), Math.toRadians(-90))
-////                .endTrajectory()
-////                .waitSeconds(0.5)
-////                .stopAndAdd(intake.idle())
-//                .setReversed(true)
-//                .setTangent(0)
-////              .lineToY(20)
-//                .splineToConstantHeading(new Vector2d(-38, 10), Math.toRadians(0))
-//                .splineTo(new Vector2d(20, 10), Math.toRadians(0))
-////                .afterTime(0.5,  linearSlides.setTargetPosition(1500))
-//                .splineToSplineHeading(new Pose2d(56,35, Math.toRadians(180)), Math.toRadians(0))
-////                .endTrajectory()
-////                .stopAndAdd(dropper.dropDown())
-////                .endTrajectory()
-////                .waitSeconds(1.5
-////                )
-////                .stopAndAdd(dropper.initPosition())
-////                .endTrajectory()
-////                .stopAndAdd(linearSlides.setTargetPosition(0))
-////                .endTrajectory()
-////                .stopAndAdd(linearSlides.waitUntilFinished())
-//                .build();
+        Action mainTrajMiddle = drive.actionBuilder(startPose)
+                .setReversed(true)
+                .strafeTo(new Vector2d(12, 30))
+                .strafeTo(new Vector2d(12, 38))
+                .splineToSplineHeading(new Pose2d(12, 33, Math.toRadians(180)), Math.toRadians(270))
+                .afterTime(1,  linearSlides.setTargetPosition(600))
+                .strafeTo(new Vector2d(56,38))
+                .endTrajectory()
+                .stopAndAdd(dropper.dropDown())
+                .waitSeconds(0.75)
+                .stopAndAdd(linearSlides.setTargetPosition(800))
+                .waitSeconds(0.5)
+                .stopAndAdd(dropper.initPosition())
+                .waitSeconds(0.25)
+                .stopAndAdd(linearSlides.setTargetPosition(0))
+                .waitSeconds(0.5)
+                .build();
+
 
         while (!isStopRequested() && !opModeIsActive()) {
             telemetry.addData("position", bluePropThreshold.getPropPosition());
@@ -186,9 +138,9 @@ public class BlueFarSUHAS extends LinearOpMode {
                     mainTrajLeft,
                     linearSlides.update()
             ));
-        }else if(cameraPos.equalsIgnoreCase("MIDDLE")){
+        }else if(cameraPos.equalsIgnoreCase("CENTER")){
             Actions.runBlocking(new RaceParallelCommand(
-//                    mainTrajMiddle,
+                    mainTrajMiddle,
                     linearSlides.update()
             ));
         }else{
