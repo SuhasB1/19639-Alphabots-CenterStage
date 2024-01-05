@@ -17,7 +17,7 @@ public class BlueClosePath {
         RoadRunnerBotEntity myBot = new DefaultBotBuilder(meepMeep)
                 // Set bot constraints: maxVel, maxAccel, maxAngVel, maxAngAccel, track width
                 .setConstraints(50, 175, Math.PI, Math.PI, 13.9)
-                .followTrajectorySequence(drive -> drive.trajectorySequenceBuilder(new Pose2d(12, 62, Math.toRadians(270)))
+                .followTrajectorySequence(drive -> drive.trajectorySequenceBuilder(new Pose2d(12, -62, Math.toRadians(270)))
 //                        .splineToConstantHeading(new Vector2d(-36, 35), Math.toRadians(270))
 //                        .build()
                                 /* Blue Far Center */
@@ -46,14 +46,14 @@ public class BlueClosePath {
 
 
                         // Blue Close Left
-                        .strafeTo(new Vector2d(12,45))
-                        .splineToSplineHeading(new Pose2d(12,32, Math.toRadians(0)), Math.toRadians(-90))
+                        .strafeTo(new Vector2d(12,-45))
+                        .splineToSplineHeading(new Pose2d(12,-32, Math.toRadians(0)), Math.toRadians(-90))
                         .waitSeconds(0.5)
                         .setReversed(true)
                         .setTangent(0)
-                        .splineToConstantHeading(new Vector2d(12, 10), Math.toRadians(0))
-                        .splineTo(new Vector2d(20, 10), Math.toRadians(0))
-                        .splineToSplineHeading(new Pose2d(56,35, Math.toRadians(180)), Math.toRadians(0))
+                        .splineToConstantHeading(new Vector2d(12, -10), Math.toRadians(0))
+                        .splineTo(new Vector2d(20, -10), Math.toRadians(0))
+                        .splineToSplineHeading(new Pose2d(56,-35, Math.toRadians(180)), Math.toRadians(0))
 
                         .build()
 

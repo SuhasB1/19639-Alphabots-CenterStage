@@ -77,12 +77,12 @@ public class CompleteBlueFar extends LinearOpMode {
                 .setTangent(0)
                 .splineToConstantHeading(new Vector2d(-38, 10), Math.toRadians(0))
                 .splineTo(new Vector2d(20, 10), Math.toRadians(0))
-                .afterTime(1,  linearSlides.setTargetPosition(800))
-                .splineToSplineHeading(new Pose2d(56,38, Math.toRadians(180)), Math.toRadians(0))
+                .afterTime(1,  linearSlides.setTargetPosition(600))
+                .splineToSplineHeading(new Pose2d(56,40.5, Math.toRadians(180)), Math.toRadians(0))
                 .endTrajectory()
                 .stopAndAdd(dropper.dropDown())
                 .waitSeconds(0.75)
-                .stopAndAdd(linearSlides.setTargetPosition(1000))
+                .stopAndAdd(linearSlides.setTargetPosition(800))
                 .waitSeconds(0.5)
                 .stopAndAdd(dropper.initPosition())
                 .waitSeconds(0.25)
@@ -100,13 +100,13 @@ public class CompleteBlueFar extends LinearOpMode {
                 .setReversed(true)
                 .setTangent(0)
                 .splineToConstantHeading(new Vector2d(-38, 10), Math.toRadians(0))
-                .splineTo(new Vector2d(20, 10), Math.toRadians(0))
-                .afterTime(1,  linearSlides.setTargetPosition(800))
-                .splineToSplineHeading(new Pose2d(56,27.5, Math.toRadians(180)), Math.toRadians(0))
+                .splineTo(new Vector2d(20, 13), Math.toRadians(0))
+                .afterTime(1,  linearSlides.setTargetPosition(600))
+                .splineToSplineHeading(new Pose2d(56,33, Math.toRadians(180)), Math.toRadians(0))
                 .endTrajectory()
                 .stopAndAdd(dropper.dropDown())
                 .waitSeconds(0.75)
-                .stopAndAdd(linearSlides.setTargetPosition(1000))
+                .stopAndAdd(linearSlides.setTargetPosition(800))
                 .waitSeconds(0.5)
                 .stopAndAdd(dropper.initPosition())
                 .waitSeconds(0.25)
@@ -116,14 +116,14 @@ public class CompleteBlueFar extends LinearOpMode {
 
         Action mainTrajMiddle = drive.actionBuilder(startPose)
                 .setReversed(true)
-                .strafeTo(new Vector2d(-36, 27))
+                .strafeTo(new Vector2d(-36, 28.5))
                 .strafeTo(new Vector2d(-36, 38))
                 .splineToSplineHeading(new Pose2d(-36, 32, Math.toRadians(180)), Math.toRadians(270))
-                .afterTime(5,  linearSlides.setTargetPosition(800))
-                .strafeTo(new Vector2d(58,35.5))
+                .afterTime(5,  linearSlides.setTargetPosition(600))
+                .strafeTo(new Vector2d(58,39))
                 .stopAndAdd(dropper.dropDown())
                 .waitSeconds(0.75)
-                .stopAndAdd(linearSlides.setTargetPosition(1000))
+                .stopAndAdd(linearSlides.setTargetPosition(800))
                 .waitSeconds(0.5)
                 .stopAndAdd(dropper.initPosition())
                 .waitSeconds(0.25)
@@ -140,6 +140,7 @@ public class CompleteBlueFar extends LinearOpMode {
             telemetry.update();
         }
         cameraPos = bluePropThreshold.getPropPosition();
+        cameraPos = "CENTER";
 
         if (cameraPos.equalsIgnoreCase("LEFT")){
             Actions.runBlocking(new RaceParallelCommand(

@@ -32,7 +32,7 @@ public class CompleteBlueClose extends LinearOpMode {
     public static double Rp = 0.015, Ri = 0, Rd = 0.0003;
     public static double dumpInitPosition = 0.65;
 
-    public static double dumpPosition = 0.95;
+    public static double dumpPosition = 0.97;
     //1200 ticks
 
     public static String cameraPos = "MIDDLE";
@@ -77,7 +77,7 @@ public class CompleteBlueClose extends LinearOpMode {
                 .setTangent(0)
                 .splineToConstantHeading(new Vector2d(12, 10), Math.toRadians(0))
                 .splineTo(new Vector2d(20, 10), Math.toRadians(0))
-                .afterTime(1,  linearSlides.setTargetPosition(600))
+                .afterTime(1,  linearSlides.setTargetPosition(650))
                 .splineToSplineHeading(new Pose2d(56,43, Math.toRadians(180)), Math.toRadians(0))
                 .endTrajectory()
                 .stopAndAdd(dropper.dropDown())
@@ -95,7 +95,7 @@ public class CompleteBlueClose extends LinearOpMode {
                 .setReversed(true)
                 .strafeTo(new Vector2d(12 ,45))
                 .splineToSplineHeading(new Pose2d(9.5,32, Math.toRadians(180)), Math.toRadians(-90))
-                .afterTime(1,  linearSlides.setTargetPosition(600))
+                .afterTime(1,  linearSlides.setTargetPosition(650))
                 .strafeTo(new Vector2d(56, 31))
                 .endTrajectory()
                 .stopAndAdd(dropper.dropDown())
@@ -113,12 +113,12 @@ public class CompleteBlueClose extends LinearOpMode {
                 .strafeTo(new Vector2d(12, 30))
                 .strafeTo(new Vector2d(12, 38))
                 .splineToSplineHeading(new Pose2d(12, 33, Math.toRadians(180)), Math.toRadians(270))
-                .afterTime(1,  linearSlides.setTargetPosition(600))
-                .strafeTo(new Vector2d(56,38))
+                .afterTime(1,  linearSlides.setTargetPosition(500))
+                .strafeTo(new Vector2d(56,37.5))
                 .endTrajectory()
                 .stopAndAdd(dropper.dropDown())
                 .waitSeconds(0.75)
-                .stopAndAdd(linearSlides.setTargetPosition(800))
+                .stopAndAdd(linearSlides.setTargetPosition(650))
                 .waitSeconds(0.5)
                 .stopAndAdd(dropper.initPosition())
                 .waitSeconds(0.25)
