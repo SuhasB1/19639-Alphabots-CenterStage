@@ -55,7 +55,7 @@ public class CompleteRedClose extends LinearOpMode {
         telemetry = new MultipleTelemetry(telemetry, FtcDashboard.getInstance().getTelemetry());
         controllerLeft = new PIDController(Lp, Li, Ld);
         controllerRight = new PIDController(Rp, Ri, Rd);
-        MecanumDrive drive = new MecanumDrive(hardwareMap, new Pose2d(12, -62, Math.toRadians(270)));
+        MecanumDrive drive = new MecanumDrive(hardwareMap, new Pose2d(12, -62, Math.toRadians(90)));
         bluePropThreshold = new BluePropThreshold();
         portal = VisionPortal.easyCreateWithDefaults(
                 hardwareMap.get(WebcamName.class, "Webcam 1"), bluePropThreshold);
@@ -63,7 +63,7 @@ public class CompleteRedClose extends LinearOpMode {
         IntakeSystem intake = new IntakeSystem(hardwareMap);
         LinearSlides linearSlides = new LinearSlides(hardwareMap);
         DropperSystem dropper = new DropperSystem(hardwareMap);
-        Pose2d startPose = new Pose2d(12,-62,Math.toRadians(270));
+        Pose2d startPose = new Pose2d(12,-62,Math.toRadians(90));
         // Delcare Trajectory as such
         Action mainTraj = null;
 
@@ -135,7 +135,7 @@ public class CompleteRedClose extends LinearOpMode {
 
         if (cameraPos.equalsIgnoreCase("LEFT")){
             Actions.runBlocking(new RaceParallelCommand(
-                    mainTrajLeft,
+                    mainTrajRight,
                     linearSlides.update()
             ));
         }else if(cameraPos.equalsIgnoreCase("CENTER")){
@@ -145,7 +145,7 @@ public class CompleteRedClose extends LinearOpMode {
             ));
         }else{
             Actions.runBlocking(new RaceParallelCommand(
-                    mainTrajRight,
+                    mainTrajLeft,
                     linearSlides.update()
             ));
         }

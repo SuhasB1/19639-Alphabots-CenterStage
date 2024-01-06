@@ -55,7 +55,7 @@ public class CompleteRedFar extends LinearOpMode {
         telemetry = new MultipleTelemetry(telemetry, FtcDashboard.getInstance().getTelemetry());
         controllerLeft = new PIDController(Lp, Li, Ld);
         controllerRight = new PIDController(Rp, Ri, Rd);
-        MecanumDrive drive = new MecanumDrive(hardwareMap, new Pose2d(-36, -62, Math.toRadians(270)));
+        MecanumDrive drive = new MecanumDrive(hardwareMap, new Pose2d(-36, -62, Math.toRadians(90)));
         bluePropThreshold = new BluePropThreshold();
         portal = VisionPortal.easyCreateWithDefaults(
                 hardwareMap.get(WebcamName.class, "Webcam 1"), bluePropThreshold);
@@ -70,7 +70,7 @@ public class CompleteRedFar extends LinearOpMode {
         Action mainTrajLeft = drive.actionBuilder(startPose)
                 .setReversed(true)
                 .lineToY(45)
-                .splineToSplineHeading(new Pose2d(-38,-32, Math.toRadians(0)), Math.toRadians(-90))
+                .splineToSplineHeading(new Pose2d(-38,-32, Math.toRadians(0)), Math.toRadians(90))
                 .endTrajectory()
                 .stopAndAdd(intake.idle())
                 .setReversed(true)
@@ -144,7 +144,7 @@ public class CompleteRedFar extends LinearOpMode {
 
         if (cameraPos.equalsIgnoreCase("LEFT")){
             Actions.runBlocking(new RaceParallelCommand(
-                    mainTrajLeft,
+                    mainTrajRight,
                     linearSlides.update()
             ));
         }else if(cameraPos.equalsIgnoreCase("CENTER")){
@@ -154,7 +154,7 @@ public class CompleteRedFar extends LinearOpMode {
             ));
         }else{
             Actions.runBlocking(new RaceParallelCommand(
-                    mainTrajRight,
+                    mainTrajLeft,
                     linearSlides.update()
             ));
         }
