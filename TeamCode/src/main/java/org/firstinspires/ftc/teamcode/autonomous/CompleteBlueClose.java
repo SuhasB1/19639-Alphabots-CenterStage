@@ -32,7 +32,7 @@ public class CompleteBlueClose extends LinearOpMode {
     public static double Rp = 0.015, Ri = 0, Rd = 0.0003;
     public static double dumpInitPosition = 0.65;
 
-    public static double dumpPosition = 0.97;
+    public static double dumpPosition = 0.23;
     //1200 ticks
 
     public static String cameraPos = "MIDDLE";

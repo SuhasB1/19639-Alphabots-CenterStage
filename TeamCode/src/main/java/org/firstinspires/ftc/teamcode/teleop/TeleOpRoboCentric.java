@@ -14,6 +14,7 @@ import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DigitalChannel;
 import com.qualcomm.robotcore.hardware.Gamepad;
 import com.qualcomm.robotcore.hardware.Servo;
+import com.qualcomm.robotcore.hardware.VoltageSensor;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.teamcode.roadrunner.MecanumDrive;
@@ -40,13 +41,15 @@ public class TeleOpRoboCentric extends LinearOpMode {
     Servo dumpServo2;
     public static double dumpInitPosition = 0.65;
 
-    public static double dumpPosition = 0.95;
-    //0.17 for starting
-    //0.64 for first height
-    //0.666 for second height (2700)
+    public static double dumpPosition = 0.19;
+    //0.21 for first
+    //0.19 for second (2700)
+    //0.65 for init
     public static double intakePower = 0;
     //power is 0.75
     ElapsedTime timer = new ElapsedTime();
+    ElapsedTime retractionTimer = new ElapsedTime();
+
 
     private PIDController controllerRight;
     private PIDController controllerLeft;
@@ -81,6 +84,8 @@ public class TeleOpRoboCentric extends LinearOpMode {
         leftSlides = hardwareMap.get(DcMotorEx.class, "leftSlides");
         rightSlides = hardwareMap.get(DcMotorEx.class, "rightSlides");
         DigitalChannel leftDistanceSensor = hardwareMap.get(DigitalChannel.class, "leftDistanceSensor");
+        VoltageSensor voltageSensor = hardwareMap.voltageSensor.iterator().next();
+
 
         dumpServo1.setPosition(dumpInitPosition);
         dumpServo2.setPosition(dumpInitPosition);
@@ -133,26 +138,29 @@ public class TeleOpRoboCentric extends LinearOpMode {
 
             //slides positions
             if(gamepad2.triangle){
-                targetPos = 2700;
-                dumpPosition = 0.666;
+                targetPos = 2600;
+                dumpPosition = 0.19;
             }
             if(gamepad2.square){
                 targetPos = 2000;
-                dumpPosition = 0.64;
+                dumpPosition = 0.21;
             }
             if(gamepad2.cross){
-                dumpServo1.setPosition(dumpInitPosition);
-                dumpServo2.setPosition(dumpInitPosition);
-                targetPos = 0;
+                    dumpServo1.setPosition(dumpInitPosition);
+                    dumpServo2.setPosition(dumpInitPosition);
+                    targetPos = 0;
 
             }
-            if(gamepad2.dpad_left){
+            if(gamepad2.options){
+                targetPos = targetPos + 200;
+            }
+            if(gamepad2.dpad_right){
                 intakePower = -0.7;
             }
             if(gamepad2.dpad_up){
                 intakePower = 0;
             }
-            if(gamepad2.dpad_right){
+            if(gamepad2.dpad_left){
                 intakePower = 0.7;
             }
             if (gamepad2.left_bumper){
@@ -184,8 +192,8 @@ public class TeleOpRoboCentric extends LinearOpMode {
             }
             drive.setDrivePowers(new PoseVelocity2d(
                     new Vector2d(
-                            gamepad1.left_stick_y * speed,
-                            gamepad1.left_stick_x * speed
+                            -gamepad1.left_stick_y * speed,
+                            -gamepad1.left_stick_x * speed
                     ),
                     -gamepad1.right_stick_x * speed
             ));
@@ -209,6 +217,7 @@ public class TeleOpRoboCentric extends LinearOpMode {
                 telemetry.addData("loopTimeMs", loopTimeMs);
                 telemetry.addData("loopTimeHz", 1000.0 / loopTimeMs);
             }
+            telemetry.addData("voltage", voltageSensor.getVoltage());
             telemetry.update();
         }
 
