@@ -23,12 +23,11 @@ public class BlueCenterPath {
 
                         /* Blue Far Center */
                                 .setReversed(true)
-                                .strafeTo(new Vector2d(-36, 30))
-                                .strafeTo(new Vector2d(-36, 27))
-                                .splineToSplineHeading(new Pose2d(-36, 34, Math.toRadians(180)), Math.toRadians(270))
-                                .lineTo(new Vector2d(58,36))
+                                .strafeTo(new Vector2d(-36, 28.5))
+                                .strafeTo(new Vector2d(-36, 38))
+                                .splineToSplineHeading(new Pose2d(-36, 32, Math.toRadians(180)), Math.toRadians(270))
+                                .strafeTo(new Vector2d(58,39))
                                 .build()
-
 
                         /* Blue Far Right */
 //

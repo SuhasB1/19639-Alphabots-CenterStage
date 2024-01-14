@@ -140,7 +140,6 @@ public class CompleteBlueFar extends LinearOpMode {
             telemetry.update();
         }
         cameraPos = bluePropThreshold.getPropPosition();
-        cameraPos = "CENTER";
 
         if (cameraPos.equalsIgnoreCase("LEFT")){
             Actions.runBlocking(new RaceParallelCommand(
