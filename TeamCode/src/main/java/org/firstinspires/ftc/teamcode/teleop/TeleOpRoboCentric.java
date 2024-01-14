@@ -10,6 +10,7 @@ import com.acmerobotics.roadrunner.Vector2d;
 import com.arcrobotics.ftclib.controller.PIDController;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DigitalChannel;
 import com.qualcomm.robotcore.hardware.Gamepad;
@@ -56,9 +57,9 @@ public class TeleOpRoboCentric extends LinearOpMode {
     public static double Lp = 0.015, Li=0, Ld = 0.0003;
     public static double Rp = 0.015, Ri=0, Rd = 0.0003;
     public static double f =0.1;
-    public static int targetPos = 0;
+    public static int targetPos;
     public int left_slides_pos;
-    public int right_slides_pos;
+    public int right_slides_pos = 0;
     DcMotorEx leftSlides;
     DcMotorEx rightSlides;
 
@@ -89,14 +90,16 @@ public class TeleOpRoboCentric extends LinearOpMode {
 
         dumpServo1.setPosition(dumpInitPosition);
         dumpServo2.setPosition(dumpInitPosition);
+        left_slides_pos = 0;
+        right_slides_pos = 0;
 
-        if(Math.abs(VariableStorage.leftLinearSlidesPos) > 20 || Math.abs(VariableStorage.rightLinearSlidesPos) > 20){
-            vertPIDController(0);
-        }
-        if(VariableStorage.dumperPos != dumpInitPosition){
-            dumpServo1.setPosition(dumpInitPosition);
-            dumpServo2.setPosition(dumpInitPosition);
-        }
+       // if(Math.abs(VariableStorage.leftLinearSlidesPos) > 20 || Math.abs(VariableStorage.rightLinearSlidesPos) > 20){
+            //vertPIDController(0);
+       // }
+       // if(VariableStorage.dumperPos != dumpInitPosition){
+          //  dumpServo1.setPosition(dumpInitPosition);
+         //   dumpServo2.setPosition(dumpInitPosition);
+       // }
 
         targetPos = 0;
         intakePower = 0;
@@ -149,7 +152,6 @@ public class TeleOpRoboCentric extends LinearOpMode {
                     dumpServo1.setPosition(dumpInitPosition);
                     dumpServo2.setPosition(dumpInitPosition);
                     targetPos = 0;
-
             }
             if(gamepad2.options){
                 targetPos = targetPos + 200;
@@ -218,6 +220,8 @@ public class TeleOpRoboCentric extends LinearOpMode {
                 telemetry.addData("loopTimeHz", 1000.0 / loopTimeMs);
             }
             telemetry.addData("voltage", voltageSensor.getVoltage());
+            telemetry.addData("left slides pos", left_slides_pos);
+            telemetry.addData("right slides pos", right_slides_pos);
             telemetry.update();
         }
 
