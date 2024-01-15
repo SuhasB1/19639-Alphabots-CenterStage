@@ -40,9 +40,9 @@ public class BluePropThreshold implements VisionProcessor, CameraStreamSource {
     double averagedMiddleBox1 = 0;
 
 
-    static final Rect MIDDLE_RECTANGLE = new Rect(225, 200, 80, 80);
+    static final Rect MIDDLE_RECTANGLE = new Rect(215, 215, 80, 80);
 
-    static final Rect RIGHT_RECTANGLE = new Rect(525, 235, 80, 80);
+    static final Rect RIGHT_RECTANGLE = new Rect(510, 235, 80, 80);
     private final AtomicReference<Bitmap> lastFrame =
             new AtomicReference<>(Bitmap.createBitmap(1, 1, Bitmap.Config.RGB_565));
 

@@ -28,7 +28,7 @@ public class RedPropDetectionClass extends LinearOpMode {
         waitForStart();
         while (opModeIsActive()){
             telemetry.addData("position", redPropThreshold.getPropPosition());
-            telemetry.addData("right red val", redPropThreshold.getAveragedRightBox());
+            telemetry.addData("right red val", redPropThreshold.getAveragedLeftBox());
             telemetry.addData("center red val", redPropThreshold.getAveragedMiddleBox());
             telemetry.update();
             sleep(50);
