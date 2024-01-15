@@ -168,7 +168,6 @@ public class CompleteRedClose extends LinearOpMode {
         public DropperSystem(HardwareMap hardwareMap) {
             dumpServo1 = hardwareMap.get(Servo.class, "dumpServoLeft");
             dumpServo2 = hardwareMap.get(Servo.class, "dumpServoRight");
-            dumpServo1.setDirection(Servo.Direction.REVERSE);
 
         }
 

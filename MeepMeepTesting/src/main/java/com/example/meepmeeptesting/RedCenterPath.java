@@ -16,14 +16,15 @@ public class RedCenterPath {
                 // Set bot constraints: maxVel, maxAccel, maxAngVel, maxAngAccel, track width
                 .setConstraints(50, 175, Math.PI, Math.PI, 13.9)
                 .followTrajectorySequence(drive ->
-                        drive.trajectorySequenceBuilder(new Pose2d(-33, -62.5, Math.toRadians(90)))
-                                .splineToConstantHeading(new Vector2d(-36, -32), Math.toRadians(90))
-                                .back(1e-3)
-                                .splineToConstantHeading(new Vector2d(-58.7, -12.3), Math.toRadians(90))
-                                .splineToLinearHeading(new Pose2d(-56, -3, Math.toRadians(180)), Math.toRadians(0))
-                                .setTangent(0)
-                                .splineToConstantHeading(new Vector2d(40, -36), Math.toRadians(270))
-
+                        drive.trajectorySequenceBuilder(new Pose2d(-36, -62, Math.toRadians(90)))
+                                .setReversed(true)
+                                .strafeTo(new Vector2d(-36 ,-45))
+//                                .splineToSplineHeading(new Pose2d(-38,-33, Math.toRadians(180)), Math.toRadians(-90))
+//                                .setReversed(true)
+//                                .setTangent(0)
+//                                .splineToConstantHeading(new Vector2d(-38, -10), Math.toRadians(0))
+//                                .splineTo(new Vector2d(20, -13), Math.toRadians(0))
+//                                .splineToSplineHeading(new Pose2d(56,-33, Math.toRadians(180)), Math.toRadians(0))
                                 .build()
 
                 );

@@ -63,22 +63,24 @@ public class CompleteRedFar extends LinearOpMode {
         IntakeSystem intake = new IntakeSystem(hardwareMap);
         LinearSlides linearSlides = new LinearSlides(hardwareMap);
         DropperSystem dropper = new DropperSystem(hardwareMap);
-        Pose2d startPose = new Pose2d(-36,-62,Math.toRadians(270));
+        Pose2d startPose = new Pose2d(-36,-62,Math.toRadians(90));
         // Delcare Trajectory as such
         Action mainTraj = null;
 
         Action mainTrajLeft = drive.actionBuilder(startPose)
                 .setReversed(true)
-                .lineToY(45)
-                .splineToSplineHeading(new Pose2d(-38,-32, Math.toRadians(0)), Math.toRadians(90))
+                .strafeTo(new Vector2d(-36, -45))
+                .splineToSplineHeading(new Pose2d(-36,-38, Math.toRadians(0)), Math.toRadians(-90))
+                .waitSeconds(0.5)
                 .endTrajectory()
                 .stopAndAdd(intake.idle())
                 .setReversed(true)
                 .setTangent(0)
-                .splineToConstantHeading(new Vector2d(-38, -10), Math.toRadians(0))
-                .splineTo(new Vector2d(20, -10), Math.toRadians(0))
+                .splineToConstantHeading(new Vector2d(-38, -14), Math.toRadians(0))
+                .splineTo(new Vector2d(20, -14), Math.toRadians(0))
                 .afterTime(1,  linearSlides.setTargetPosition(600))
-                .splineToSplineHeading(new Pose2d(56,-40.5, Math.toRadians(180)), Math.toRadians(0))
+                .splineToSplineHeading(new Pose2d(54,-34, Math.toRadians(180)), Math.toRadians(0))
+                .strafeTo(new Vector2d(58, -34.5))
                 .endTrajectory()
                 .stopAndAdd(dropper.dropDown())
                 .waitSeconds(0.75)
@@ -88,21 +90,20 @@ public class CompleteRedFar extends LinearOpMode {
                 .waitSeconds(0.25)
                 .stopAndAdd(linearSlides.setTargetPosition(0))
                 .waitSeconds(0.5)
-
                 .build();
 
         Action mainTrajRight = drive.actionBuilder(startPose)
                 .setReversed(true)
-                .strafeTo(new Vector2d(-42 ,-45))
+                .strafeTo(new Vector2d(-36 ,-45))
                 .splineToSplineHeading(new Pose2d(-38,-33, Math.toRadians(180)), Math.toRadians(-90))
                 .endTrajectory()
                 .stopAndAdd(intake.idle())
                 .setReversed(true)
                 .setTangent(0)
-                .splineToConstantHeading(new Vector2d(-38, -10), Math.toRadians(0))
-                .splineTo(new Vector2d(20, 13), Math.toRadians(0))
+                .splineToConstantHeading(new Vector2d(-40, -12), Math.toRadians(0))
+                .splineTo(new Vector2d(20, -12), Math.toRadians(0))
                 .afterTime(1,  linearSlides.setTargetPosition(600))
-                .splineToSplineHeading(new Pose2d(56,-33, Math.toRadians(180)), Math.toRadians(0))
+                .splineToSplineHeading(new Pose2d(56,-23, Math.toRadians(180)), Math.toRadians(0))
                 .endTrajectory()
                 .stopAndAdd(dropper.dropDown())
                 .waitSeconds(0.75)
@@ -113,14 +114,13 @@ public class CompleteRedFar extends LinearOpMode {
                 .stopAndAdd(linearSlides.setTargetPosition(0))
                 .waitSeconds(0.5)
                 .build();
-
         Action mainTrajMiddle = drive.actionBuilder(startPose)
                 .setReversed(true)
                 .strafeTo(new Vector2d(-36, -28.5))
-                .strafeTo(new Vector2d(-36, -38))
-                .splineToSplineHeading(new Pose2d(-36, -32, Math.toRadians(180)), Math.toRadians(270))
+                .strafeTo(new Vector2d(-36, -40))
+                .splineToSplineHeading(new Pose2d(-36, -34, Math.toRadians(180)), Math.toRadians(270))
                 .afterTime(5,  linearSlides.setTargetPosition(600))
-                .strafeTo(new Vector2d(58,-39))
+                .strafeTo(new Vector2d(58,-36))
                 .stopAndAdd(dropper.dropDown())
                 .waitSeconds(0.75)
                 .stopAndAdd(linearSlides.setTargetPosition(800))
@@ -176,8 +176,6 @@ public class CompleteRedFar extends LinearOpMode {
         public DropperSystem(HardwareMap hardwareMap) {
             dumpServo1 = hardwareMap.get(Servo.class, "dumpServoLeft");
             dumpServo2 = hardwareMap.get(Servo.class, "dumpServoRight");
-            dumpServo1.setDirection(Servo.Direction.REVERSE);
-
         }
 
         public Action dropDown() {
