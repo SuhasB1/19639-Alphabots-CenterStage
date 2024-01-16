@@ -23,6 +23,7 @@ import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
 import org.firstinspires.ftc.teamcode.roadrunner.MecanumDrive;
 import org.firstinspires.ftc.teamcode.teleop.VariableStorage;
 import org.firstinspires.ftc.teamcode.vision.BluePropThreshold;
+import org.firstinspires.ftc.teamcode.vision.RedPropThreshold;
 import org.firstinspires.ftc.vision.VisionPortal;
 
 @Autonomous(name="CompleteRedClose")
@@ -41,7 +42,7 @@ public class CompleteRedClose extends LinearOpMode {
     public int right_slides_pos;
     private PIDController controllerRight;
     private PIDController controllerLeft;
-    private BluePropThreshold bluePropThreshold; //Create an object of the VisionProcessor Class
+    private RedPropThreshold redPropThreshold; //Create an object of the VisionProcessor Class
     private VisionPortal portal;
 
     public int targetPosition = 0;
@@ -56,10 +57,10 @@ public class CompleteRedClose extends LinearOpMode {
         controllerLeft = new PIDController(Lp, Li, Ld);
         controllerRight = new PIDController(Rp, Ri, Rd);
         MecanumDrive drive = new MecanumDrive(hardwareMap, new Pose2d(12, -62, Math.toRadians(90)));
-        bluePropThreshold = new BluePropThreshold();
+        redPropThreshold = new RedPropThreshold();
         portal = VisionPortal.easyCreateWithDefaults(
-                hardwareMap.get(WebcamName.class, "Webcam 1"), bluePropThreshold);
-        FtcDashboard.getInstance().startCameraStream(bluePropThreshold, 0);
+                hardwareMap.get(WebcamName.class, "Webcam 1"), redPropThreshold);
+        FtcDashboard.getInstance().startCameraStream(redPropThreshold, 0);
         IntakeSystem intake = new IntakeSystem(hardwareMap);
         LinearSlides linearSlides = new LinearSlides(hardwareMap);
         DropperSystem dropper = new DropperSystem(hardwareMap);
@@ -70,42 +71,49 @@ public class CompleteRedClose extends LinearOpMode {
         Action mainTrajLeft = drive.actionBuilder(startPose)
                 .setReversed(true)
                 .strafeTo(new Vector2d(12,-45))
-                .splineToSplineHeading(new Pose2d(12,-32, Math.toRadians(0)), Math.toRadians(-90))
+                .splineToSplineHeading(new Pose2d(11,-32, Math.toRadians(0)), Math.toRadians(-90))
                 .endTrajectory()
                 .stopAndAdd(intake.idle())
                 .setReversed(true)
                 .setTangent(0)
                 .splineToConstantHeading(new Vector2d(12, -10), Math.toRadians(0))
                 .splineTo(new Vector2d(20, -10), Math.toRadians(0))
-                .afterTime(1,  linearSlides.setTargetPosition(650))
-                .splineToSplineHeading(new Pose2d(56,-43, Math.toRadians(180)), Math.toRadians(0))
+                .afterTime(1,  linearSlides.setTargetPosition(1200))
+                .splineToSplineHeading(new Pose2d(56,-38, Math.toRadians(180)), Math.toRadians(0))
+                .strafeTo(new Vector2d(60, -36))
                 .endTrajectory()
                 .stopAndAdd(dropper.dropDown())
                 .waitSeconds(0.75)
-                .stopAndAdd(linearSlides.setTargetPosition(800))
+                .stopAndAdd(linearSlides.setTargetPosition(1700))
                 .waitSeconds(0.5)
                 .stopAndAdd(dropper.initPosition())
                 .waitSeconds(0.25)
                 .stopAndAdd(linearSlides.setTargetPosition(0))
                 .waitSeconds(0.5)
+                .strafeTo(new Vector2d(50, -36))
+                .strafeTo(new Vector2d(50, -56))
+                .strafeTo(new Vector2d(60, -56))
                 .build();
 
 
         Action mainTrajRight = drive.actionBuilder(startPose)
                 .setReversed(true)
                 .strafeTo(new Vector2d(12 ,-45))
-                .splineToSplineHeading(new Pose2d(9.5,-32, Math.toRadians(180)), Math.toRadians(-90))
-                .afterTime(1,  linearSlides.setTargetPosition(650))
-                .strafeTo(new Vector2d(56, -31))
+                .splineToSplineHeading(new Pose2d(8.5,-32, Math.toRadians(180)), Math.toRadians(-90))
+                .afterTime(1,  linearSlides.setTargetPosition(1200))
+                .strafeTo(new Vector2d(56, -28.5))
                 .endTrajectory()
                 .stopAndAdd(dropper.dropDown())
                 .waitSeconds(0.75)
-                .stopAndAdd(linearSlides.setTargetPosition(800))
+                .stopAndAdd(linearSlides.setTargetPosition(1700))
                 .waitSeconds(0.5)
                 .stopAndAdd(dropper.initPosition())
                 .waitSeconds(0.25)
                 .stopAndAdd(linearSlides.setTargetPosition(0))
                 .waitSeconds(0.5)
+                .strafeTo(new Vector2d(50, -36))
+                .strafeTo(new Vector2d(50, -58))
+                .strafeTo(new Vector2d(60, -60))
                 .build();
 
         Action mainTrajMiddle = drive.actionBuilder(startPose)
@@ -113,25 +121,28 @@ public class CompleteRedClose extends LinearOpMode {
                 .strafeTo(new Vector2d(12, -30))
                 .strafeTo(new Vector2d(12, -38))
                 .splineToSplineHeading(new Pose2d(12, -33, Math.toRadians(180)), Math.toRadians(270))
-                .afterTime(1,  linearSlides.setTargetPosition(500))
-                .strafeTo(new Vector2d(56,-37.5))
+                .afterTime(1,  linearSlides.setTargetPosition(1200))
+                .strafeTo(new Vector2d(56,-35))
                 .endTrajectory()
                 .stopAndAdd(dropper.dropDown())
                 .waitSeconds(0.75)
-                .stopAndAdd(linearSlides.setTargetPosition(650))
+                .stopAndAdd(linearSlides.setTargetPosition(1700))
                 .waitSeconds(0.5)
                 .stopAndAdd(dropper.initPosition())
                 .waitSeconds(0.25)
                 .stopAndAdd(linearSlides.setTargetPosition(0))
                 .waitSeconds(0.5)
+                .strafeTo(new Vector2d(50, -36))
+                .strafeTo(new Vector2d(50, -58))
+                .strafeTo(new Vector2d(60, -60))
                 .build();
 
 
         while (!isStopRequested() && !opModeIsActive()) {
-            telemetry.addData("position", bluePropThreshold.getPropPosition());
+            telemetry.addData("position", redPropThreshold.getPropPosition());
             telemetry.update();
         }
-        cameraPos = bluePropThreshold.getPropPosition();
+        cameraPos = redPropThreshold.getPropPosition();
 
         if (cameraPos.equalsIgnoreCase("LEFT")){
             Actions.runBlocking(new RaceParallelCommand(

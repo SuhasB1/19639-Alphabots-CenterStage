@@ -13,12 +13,12 @@ import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 @Config
-@TeleOp(name="intake function")
+@TeleOp(name="basic cycle")
 public class basicCycle extends OpMode {
     private DcMotorEx intakeMotor;
     private Servo dumpServo1;
     private Servo dumpServo2;
-    public static double dumpPosition = 0.16;
+    public static double dumpPosition = 0.65;
     //0.16 for starting
     //0.575 for one pixel
     //0.58 for second pixel
@@ -44,7 +44,6 @@ public class basicCycle extends OpMode {
         intakeMotor = hardwareMap.get(DcMotorEx.class, "intakeMotor");
         dumpServo1 = hardwareMap.get(Servo.class, "dumpServoLeft");
         dumpServo2 = hardwareMap.get(Servo.class, "dumpServoRight");
-        dumpServo1.setDirection(Servo.Direction.REVERSE);
         controllerLeft = new PIDController(Lp,Li,Ld);
         controllerRight = new PIDController(Rp,Ri,Rd);
         telemetry = new MultipleTelemetry(telemetry, FtcDashboard.getInstance().getTelemetry());
