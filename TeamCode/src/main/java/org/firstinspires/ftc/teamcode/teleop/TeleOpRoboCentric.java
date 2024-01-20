@@ -25,8 +25,6 @@ import org.firstinspires.ftc.teamcode.roadrunner.MecanumDrive;
 @Config
 public class TeleOpRoboCentric extends LinearOpMode {
 
-    // TODO: PhotonFTC
-
     double speed;
     final ElapsedTime loopTime = new ElapsedTime();
     boolean pixelInOuttake; //need to use later
@@ -240,14 +238,6 @@ public class TeleOpRoboCentric extends LinearOpMode {
             telemetry.update();
         }
 
-    }
-
-    public void sleep(int milliseconds) {
-        try {
-            Thread.sleep(milliseconds);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
     }
     public void vertPIDController(int targetPos){
         controllerLeft.setPID(Lp, Li, Ld);

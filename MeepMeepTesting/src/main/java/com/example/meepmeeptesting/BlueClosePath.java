@@ -54,7 +54,6 @@ public class BlueClosePath {
                         .splineToConstantHeading(new Vector2d(12, -10), Math.toRadians(0))
                         .splineTo(new Vector2d(20, -10), Math.toRadians(0))
                         .splineToSplineHeading(new Pose2d(56,-35, Math.toRadians(180)), Math.toRadians(0))
-
                         .build()
 
                 );

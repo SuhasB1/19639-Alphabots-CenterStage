@@ -25,8 +25,8 @@ public class BlueCenterPath {
                                 .setReversed(true)
                                 .strafeTo(new Vector2d(-36, 28.5))
                                 .strafeTo(new Vector2d(-36, 38))
-                                .splineToSplineHeading(new Pose2d(-36, 32, Math.toRadians(180)), Math.toRadians(270))
-                                .strafeTo(new Vector2d(58,39))
+                                .splineToSplineHeading(new Pose2d(-36, 37, Math.toRadians(180)), Math.toRadians(270))
+                                .strafeTo(new Vector2d(58,35))
                                 .build()
 
                         /* Blue Far Right */
@@ -41,11 +41,18 @@ public class BlueCenterPath {
 //                                .splineTo(new Vector2d(20, 10), Math.toRadians(0))
 //                                .splineToSplineHeading(new Pose2d(56,35, Math.toRadians(180)), Math.toRadians(0))
 //                                .build()
-//
 
+
+//                        .setReversed(true)
+//                        .strafeTo(new Vector2d(-36, 45))
+//                        .splineToSplineHeading(new Pose2d(-41,32, Math.toRadians(180)), Math.toRadians(-90))
+//                        .setReversed(true)
+//                        .setTangent(0)
 //                        .splineToConstantHeading(new Vector2d(-38, 10), Math.toRadians(0))
 //                        .splineTo(new Vector2d(20, 10), Math.toRadians(0))
-//                        .splineToSplineHeading(new Pose2d(53,38, Math.toRadians(180)), Math.toRadians(0))
+//                        .splineToSplineHeading(new Pose2d(56,30, Math.toRadians(180)), Math.toRadians(0))
+//
+//
 //                        .build()
 
                 );

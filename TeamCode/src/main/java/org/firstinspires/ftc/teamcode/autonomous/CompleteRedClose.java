@@ -16,6 +16,7 @@ import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
 
@@ -257,6 +258,7 @@ public class CompleteRedClose extends LinearOpMode {
         public LinearSlides(HardwareMap hardwareMap) {
             leftSlides = hardwareMap.get(DcMotorEx.class, "leftSlides");
             rightSlides = hardwareMap.get(DcMotorEx.class, "rightSlides");
+            rightSlides.setDirection(DcMotorSimple.Direction.REVERSE);
         }
         public boolean closeEnough() {
             return Math.abs(((leftSlides.getCurrentPosition()+rightSlides.getCurrentPosition())/2) - targetPosition) < 20;
