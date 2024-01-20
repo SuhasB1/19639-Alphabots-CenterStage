@@ -39,12 +39,12 @@ public class TeleOpRoboCentric extends LinearOpMode {
     DcMotorEx intakeMotor;
     Servo dumpServo1;
     Servo dumpServo2;
-    public static double dumpInitPosition = 0.65;
+    public static double dumpInitPosition = 0.6;
 
     public static double dumpPosition = 0.19;
-    //0.21 for first
-    //0.19 for second (2700)
-    //0.65 for init
+    //0.16 for first
+    //0.15 for second (2700)
+    //0.6 for init
     public static double intakePower = 0;
     //power is 0.75
     ElapsedTime timer = new ElapsedTime();
@@ -157,11 +157,11 @@ public class TeleOpRoboCentric extends LinearOpMode {
             //slides positions
             if(gamepad2.triangle){
                 targetPos = 2600;
-                dumpPosition = 0.19;
+                dumpPosition = 0.15;
             }
             if(gamepad2.square){
                 targetPos = 2000;
-                dumpPosition = 0.21;
+                dumpPosition = 0.16;
             }
             if(gamepad2.cross){
                     dumpServo1.setPosition(dumpInitPosition);
