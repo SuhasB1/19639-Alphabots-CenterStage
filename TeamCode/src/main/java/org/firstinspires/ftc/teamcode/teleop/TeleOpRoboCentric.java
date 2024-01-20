@@ -67,6 +67,8 @@ public class TeleOpRoboCentric extends LinearOpMode {
     @Override
     public void runOpMode() {
 
+
+
         // Telemetry Init
         telemetry.setMsTransmissionInterval(50);
         telemetry = new MultipleTelemetry(telemetry, FtcDashboard.getInstance().getTelemetry());
@@ -82,8 +84,22 @@ public class TeleOpRoboCentric extends LinearOpMode {
         controllerLeft = new PIDController(Lp,Li,Ld);
         controllerRight = new PIDController(Rp,Ri,Rd);
         telemetry = new MultipleTelemetry(telemetry, FtcDashboard.getInstance().getTelemetry());
+
         leftSlides = hardwareMap.get(DcMotorEx.class, "leftSlides");
         rightSlides = hardwareMap.get(DcMotorEx.class, "rightSlides");
+
+
+
+        leftSlides.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        rightSlides.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+
+        leftSlides.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        rightSlides.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+
+        leftSlides.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        rightSlides.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+
+
         DigitalChannel leftDistanceSensor = hardwareMap.get(DigitalChannel.class, "leftDistanceSensor");
         VoltageSensor voltageSensor = hardwareMap.voltageSensor.iterator().next();
 
@@ -153,9 +169,7 @@ public class TeleOpRoboCentric extends LinearOpMode {
                     dumpServo2.setPosition(dumpInitPosition);
                     targetPos = 0;
             }
-            if(gamepad2.options){
-                targetPos = targetPos + 200;
-            }
+
             if(gamepad2.dpad_right){
                 intakePower = -0.7;
             }
