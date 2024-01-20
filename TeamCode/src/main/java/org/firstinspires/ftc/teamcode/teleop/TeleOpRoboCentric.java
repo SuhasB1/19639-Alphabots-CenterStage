@@ -12,6 +12,7 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.DigitalChannel;
 import com.qualcomm.robotcore.hardware.Gamepad;
 import com.qualcomm.robotcore.hardware.Servo;
@@ -88,7 +89,7 @@ public class TeleOpRoboCentric extends LinearOpMode {
         leftSlides = hardwareMap.get(DcMotorEx.class, "leftSlides");
         rightSlides = hardwareMap.get(DcMotorEx.class, "rightSlides");
 
-
+        rightSlides.setDirection(DcMotorSimple.Direction.REVERSE);
 
         leftSlides.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         rightSlides.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
