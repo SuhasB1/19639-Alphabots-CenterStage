@@ -40,9 +40,9 @@ public class RedPropThreshold implements VisionProcessor, CameraStreamSource {
     double averagedMiddleBox1 = 0;
 
 
-    static final Rect MIDDLE_RECTANGLE = new Rect(185, 150, 80, 80);
+    static final Rect MIDDLE_RECTANGLE = new Rect(85, 190, 80, 80);
 
-    static final Rect RIGHT_RECTANGLE = new Rect(445, 200, 80, 80);
+    static final Rect RIGHT_RECTANGLE = new Rect(355, 265, 80, 80);
     private final AtomicReference<Bitmap> lastFrame =
             new AtomicReference<>(Bitmap.createBitmap(1, 1, Bitmap.Config.RGB_565));
 

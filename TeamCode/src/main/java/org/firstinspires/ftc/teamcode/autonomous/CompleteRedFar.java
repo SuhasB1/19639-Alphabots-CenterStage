@@ -33,7 +33,7 @@ public class CompleteRedFar extends LinearOpMode {
     public static double Rp = 0.015, Ri = 0, Rd = 0.0003;
     public static double dumpInitPosition = 0.6;
 
-    public static double dumpPosition = 0.18;
+    public static double dumpPosition = 0.165;
     //1200 ticks
 
     public static String cameraPos = "MIDDLE";
@@ -69,10 +69,13 @@ public class CompleteRedFar extends LinearOpMode {
         Action mainTraj = null;
 
         Action mainTrajLeft = drive.actionBuilder(startPose)
+                .waitSeconds(10)
+
+
+
                 .setReversed(true)
-                .strafeTo(new Vector2d(-36, -45))
-                .splineToSplineHeading(new Pose2d(-36,-38, Math.toRadians(0)), Math.toRadians(-90))
-                .waitSeconds(0.5)
+                .strafeTo(new Vector2d(-35, -45))
+                .splineToSplineHeading(new Pose2d(-39.5,-37, Math.toRadians(0)), Math.toRadians(-90)) //x was -38 before
                 .endTrajectory()
                 .stopAndAdd(intake.idle())
                 .setReversed(true)
@@ -81,19 +84,23 @@ public class CompleteRedFar extends LinearOpMode {
                 .splineTo(new Vector2d(20, -14), Math.toRadians(0))
                 .afterTime(1,  linearSlides.setTargetPosition(1200))
                 .splineToSplineHeading(new Pose2d(54,-37.5, Math.toRadians(180)), Math.toRadians(0))
-                .strafeTo(new Vector2d(60, -39))
+                .strafeTo(new Vector2d(60, -37.5))
                 .endTrajectory()
+                .waitSeconds(1)
                 .stopAndAdd(dropper.dropDown())
-                .waitSeconds(0.75)
-                .stopAndAdd(linearSlides.setTargetPosition(1700))
-                .waitSeconds(0.5)
+                .waitSeconds(1.75)
+                .stopAndAdd(linearSlides.setTargetPosition(2000))
+                .waitSeconds(1.5)
                 .stopAndAdd(dropper.initPosition())
                 .waitSeconds(0.25)
                 .stopAndAdd(linearSlides.setTargetPosition(0))
                 .waitSeconds(0.5)
                 .build();
 
+
         Action mainTrajRight = drive.actionBuilder(startPose)
+                .waitSeconds(10)
+
                 .setReversed(true)
                 .strafeTo(new Vector2d(-36 ,-45))
                 .splineToSplineHeading(new Pose2d(-40.5,-33, Math.toRadians(180)), Math.toRadians(-90)) //x was -38 before
@@ -106,27 +113,31 @@ public class CompleteRedFar extends LinearOpMode {
                 .afterTime(1,  linearSlides.setTargetPosition(1200))
                 .splineToSplineHeading(new Pose2d(56,-32, Math.toRadians(180)), Math.toRadians(0))
                 .endTrajectory()
+                .waitSeconds(1)
                 .stopAndAdd(dropper.dropDown())
-                .waitSeconds(1.25)
-                .stopAndAdd(linearSlides.setTargetPosition(1700))
-                .waitSeconds(0.5)
+                .waitSeconds(1.75)
+                .stopAndAdd(linearSlides.setTargetPosition(2000))
+                .waitSeconds(1.5)
                 .stopAndAdd(dropper.initPosition())
                 .waitSeconds(0.25)
                 .stopAndAdd(linearSlides.setTargetPosition(0))
                 .waitSeconds(0.5)
                 .build();
         Action mainTrajMiddle = drive.actionBuilder(startPose)
+                .waitSeconds(10)
+
                 .setReversed(true)
                 .strafeTo(new Vector2d(-36, -28.5))
-                .strafeTo(new Vector2d(-36, -40))
+                .strafeTo(new Vector2d(-36, -41))
                 .splineToSplineHeading(new Pose2d(-36, -36, Math.toRadians(180)), Math.toRadians(270))
                 .afterTime(5,  linearSlides.setTargetPosition(1200))
                 .strafeTo(new Vector2d(58,-39))
                 .endTrajectory()
+                .waitSeconds(1)
                 .stopAndAdd(dropper.dropDown())
-                .waitSeconds(0.75)
-                .stopAndAdd(linearSlides.setTargetPosition(1700))
-                .waitSeconds(0.5)
+                .waitSeconds(1.75)
+                .stopAndAdd(linearSlides.setTargetPosition(2000))
+                .waitSeconds(1.5)
                 .stopAndAdd(dropper.initPosition())
                 .waitSeconds(0.25)
                 .stopAndAdd(linearSlides.setTargetPosition(0))

@@ -33,7 +33,7 @@ public class CompleteBlueClose extends LinearOpMode {
     public static double Rp = 0.015, Ri = 0, Rd = 0.0003;
     public static double dumpInitPosition = 0.6;
 
-    public static double dumpPosition = 0.18;
+    public static double dumpPosition = 0.15;
     //1200 ticks
 
     public static String cameraPos = "MIDDLE";
@@ -70,8 +70,8 @@ public class CompleteBlueClose extends LinearOpMode {
 
         Action mainTrajLeft = drive.actionBuilder(startPose)
                 .setReversed(true)
-                .strafeTo(new Vector2d(12,45))
-                .splineToSplineHeading(new Pose2d(12,32, Math.toRadians(0)), Math.toRadians(-90))
+                .strafeTo(new Vector2d(9.5,45))
+                .splineToSplineHeading(new Pose2d(11,32, Math.toRadians(0)), Math.toRadians(-90))
                 .endTrajectory()
                 .stopAndAdd(intake.idle())
                 .setReversed(true)
@@ -79,13 +79,14 @@ public class CompleteBlueClose extends LinearOpMode {
                 .splineToConstantHeading(new Vector2d(12, 10), Math.toRadians(0))
                 .splineTo(new Vector2d(20, 10), Math.toRadians(0))
                 .afterTime(1,  linearSlides.setTargetPosition(1200))
-                .splineToSplineHeading(new Pose2d(56,43, Math.toRadians(180)), Math.toRadians(0))
-                .strafeTo(new Vector2d(60, 43))
+                .splineToSplineHeading(new Pose2d(56,41, Math.toRadians(180)), Math.toRadians(0))
+                .strafeTo(new Vector2d(60, 41))
                 .endTrajectory()
+                .waitSeconds(1)
                 .stopAndAdd(dropper.dropDown())
-                .waitSeconds(0.75)
+                .waitSeconds(1.75)
                 .stopAndAdd(linearSlides.setTargetPosition(1700))
-                .waitSeconds(0.5)
+                .waitSeconds(1.5)
                 .stopAndAdd(dropper.initPosition())
                 .waitSeconds(0.25)
                 .stopAndAdd(linearSlides.setTargetPosition(0))
@@ -104,10 +105,11 @@ public class CompleteBlueClose extends LinearOpMode {
                 .strafeTo(new Vector2d(56, 30.5))
                 .strafeTo(new Vector2d(60, 30.5))
                 .endTrajectory()
+                .waitSeconds(1)
                 .stopAndAdd(dropper.dropDown())
-                .waitSeconds(0.75)
+                .waitSeconds(1.75)
                 .stopAndAdd(linearSlides.setTargetPosition(1700))
-                .waitSeconds(0.5)
+                .waitSeconds(1.5)
                 .stopAndAdd(dropper.initPosition())
                 .waitSeconds(0.25)
                 .stopAndAdd(linearSlides.setTargetPosition(0))
@@ -126,10 +128,11 @@ public class CompleteBlueClose extends LinearOpMode {
                 .strafeTo(new Vector2d(56,37.5))
                 .strafeTo(new Vector2d(60, 37.5))
                 .endTrajectory()
+                .waitSeconds(1)
                 .stopAndAdd(dropper.dropDown())
-                .waitSeconds(0.75)
+                .waitSeconds(1.75)
                 .stopAndAdd(linearSlides.setTargetPosition(1700))
-                .waitSeconds(0.5)
+                .waitSeconds(1.5)
                 .stopAndAdd(dropper.initPosition())
                 .waitSeconds(0.25)
                 .stopAndAdd(linearSlides.setTargetPosition(0))

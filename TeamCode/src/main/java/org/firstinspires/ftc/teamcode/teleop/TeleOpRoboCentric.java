@@ -39,6 +39,7 @@ public class TeleOpRoboCentric extends LinearOpMode {
     DcMotorEx intakeMotor;
     Servo dumpServo1;
     Servo dumpServo2;
+    Servo planeServo;
     public static double dumpInitPosition = 0.6;
 
     public static double dumpPosition = 0.19;
@@ -46,6 +47,10 @@ public class TeleOpRoboCentric extends LinearOpMode {
     //0.15 for second (2700)
     //0.6 for init
     public static double intakePower = 0;
+
+    public static double planeInit = 0.1;
+
+    public static double planeLaunch = 0.5;
     //power is 0.75
     ElapsedTime timer = new ElapsedTime();
     ElapsedTime retractionTimer = new ElapsedTime();
@@ -77,6 +82,7 @@ public class TeleOpRoboCentric extends LinearOpMode {
         intakeMotor = hardwareMap.get(DcMotorEx.class, "intakeMotor");
         dumpServo1 = hardwareMap.get(Servo.class, "dumpServoLeft");
         dumpServo2 = hardwareMap.get(Servo.class, "dumpServoRight");
+        planeServo = hardwareMap.get(Servo.class, "planeServo");
 
 
 
@@ -98,13 +104,13 @@ public class TeleOpRoboCentric extends LinearOpMode {
         leftSlides.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         rightSlides.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 
-
-        DigitalChannel leftDistanceSensor = hardwareMap.get(DigitalChannel.class, "leftDistanceSensor");
         VoltageSensor voltageSensor = hardwareMap.voltageSensor.iterator().next();
 
 
         dumpServo1.setPosition(dumpInitPosition);
         dumpServo2.setPosition(dumpInitPosition);
+
+
         left_slides_pos = 0;
         right_slides_pos = 0;
 
@@ -161,7 +167,7 @@ public class TeleOpRoboCentric extends LinearOpMode {
             }
             if(gamepad2.square){
                 targetPos = 2000;
-                dumpPosition = 0.16;
+                dumpPosition = 0.155;
             }
             if(gamepad2.cross){
                     dumpServo1.setPosition(dumpInitPosition);
@@ -170,13 +176,32 @@ public class TeleOpRoboCentric extends LinearOpMode {
             }
 
             if(gamepad2.dpad_right){
-                intakePower = -0.7;
+                intakePower = -0.9;
             }
             if(gamepad2.dpad_up){
                 intakePower = 0;
             }
+            if(gamepad1.dpad_up) {
+                planeServo.setPosition(planeLaunch);
+            }
             if(gamepad2.dpad_left){
-                intakePower = 0.7;
+                intakePower = 0.9;
+            }
+            if(gamepad1.triangle) {
+                targetPos = 2100;
+
+            }
+            if(gamepad1.circle) {
+                dumpServo1.setPosition(0);
+                dumpServo2.setPosition(0);
+            }
+            if(gamepad1.square) {
+                targetPos = 1700;
+                dumpServo1.setPosition(0.4);
+                dumpServo2.setPosition(0.4);
+            }
+            if(gamepad1.cross) {
+                targetPos = 550;
             }
             if (gamepad2.left_bumper){
                 dumpServo1.setPosition(dumpInitPosition);
@@ -186,24 +211,18 @@ public class TeleOpRoboCentric extends LinearOpMode {
                 dumpServo1.setPosition(dumpPosition);
                 dumpServo2.setPosition(dumpPosition);
             }
-            boolean detectedLeft = leftDistanceSensor.getState();
-            detectedLeft = !detectedLeft;
-            if (detectedLeft){
-                intakePower = -0.7;
-                timer.startTime();
-                if(timer.seconds() >= 2){
-                    intakePower = 0;
-                }
-            }else{
-                timer.reset();
+
+            if(gamepad1.dpad_up) {
+                planeServo.setPosition(0.5);
             }
+
             // Update the speed
             if (padSlowMode) {
-                speed = .35;
+                speed = .25;
             } else if (padFastMode) {
                 speed = 1;
             } else {
-                speed = .8;
+                speed = .9;
             }
             drive.setDrivePowers(new PoseVelocity2d(
                     new Vector2d(
