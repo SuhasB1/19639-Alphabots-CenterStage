@@ -14,6 +14,7 @@ import org.opencv.imgproc.Imgproc;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import com.acmerobotics.dashboard.FtcDashboard;
+import com.acmerobotics.dashboard.config.Config;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import java.util.concurrent.atomic.AtomicReference;
@@ -27,7 +28,7 @@ import org.firstinspires.ftc.vision.VisionProcessor;
 import org.opencv.android.Utils;
 import org.opencv.core.Mat;
 
-
+@Config
 public class RedPropThreshold implements VisionProcessor, CameraStreamSource {
     Mat testMat = new Mat();
     Mat highMat = new Mat();
@@ -39,10 +40,17 @@ public class RedPropThreshold implements VisionProcessor, CameraStreamSource {
     double averagedRightBox1 = 0;
     double averagedMiddleBox1 = 0;
 
+    public static int middleX = 85;
+    public static int middleY = 80;
 
-    static final Rect MIDDLE_RECTANGLE = new Rect(85, 190, 80, 80);
+    public static int rightX = 355;
+    public static int rightY = 135;
 
-    static final Rect RIGHT_RECTANGLE = new Rect(355, 265, 80, 80);
+
+
+    static final Rect MIDDLE_RECTANGLE = new Rect(middleX, middleY, 80, 80); //new Rect(85, 80, 80, 80);
+
+    static final Rect RIGHT_RECTANGLE = new Rect(rightX, rightY, 80, 80); //new Rect(355, 135, 80, 80);
     private final AtomicReference<Bitmap> lastFrame =
             new AtomicReference<>(Bitmap.createBitmap(1, 1, Bitmap.Config.RGB_565));
 

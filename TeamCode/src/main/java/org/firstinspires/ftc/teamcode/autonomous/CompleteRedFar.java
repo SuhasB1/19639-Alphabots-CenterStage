@@ -9,6 +9,7 @@ import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
 import com.acmerobotics.dashboard.telemetry.TelemetryPacket;
 import com.acmerobotics.roadrunner.Action;
 import com.acmerobotics.roadrunner.Pose2d;
+import com.acmerobotics.roadrunner.TranslationalVelConstraint;
 import com.acmerobotics.roadrunner.Vector2d;
 import com.acmerobotics.roadrunner.ftc.Actions;
 import com.arcrobotics.ftclib.controller.PIDController;
@@ -31,9 +32,9 @@ import org.firstinspires.ftc.vision.VisionPortal;
 public class CompleteRedFar extends LinearOpMode {
     public static double Lp = 0.015, Li = 0, Ld = 0.0003;
     public static double Rp = 0.015, Ri = 0, Rd = 0.0003;
-    public static double dumpInitPosition = 0.6;
+    public static double dumpInitPosition = 0.9;
 
-    public static double dumpPosition = 0.165;
+    public static double dumpPosition = 0.535;
     //1200 ticks
 
     public static String cameraPos = "MIDDLE";
@@ -72,19 +73,19 @@ public class CompleteRedFar extends LinearOpMode {
                 .waitSeconds(10)
 
 
-
                 .setReversed(true)
-                .strafeTo(new Vector2d(-35, -45))
-                .splineToSplineHeading(new Pose2d(-39.5,-37, Math.toRadians(0)), Math.toRadians(-90)) //x was -38 before
+                .strafeTo(new Vector2d(-36, -45))
+                .splineToSplineHeading(new Pose2d(-36,-37, Math.toRadians(0)), Math.toRadians(-90)) //x was -38 before
                 .endTrajectory()
                 .stopAndAdd(intake.idle())
                 .setReversed(true)
                 .setTangent(0)
                 .splineToConstantHeading(new Vector2d(-38, -14), Math.toRadians(0))
                 .splineTo(new Vector2d(20, -14), Math.toRadians(0))
-                .afterTime(1,  linearSlides.setTargetPosition(1200))
+                .afterTime(1,  linearSlides.setTargetPosition(1400))
                 .splineToSplineHeading(new Pose2d(54,-37.5, Math.toRadians(180)), Math.toRadians(0))
-                .strafeTo(new Vector2d(60, -37.5))
+                .strafeTo(new Vector2d(60.0, -37.5),
+                        new TranslationalVelConstraint(10.0))
                 .endTrajectory()
                 .waitSeconds(1)
                 .stopAndAdd(dropper.dropDown())
@@ -108,10 +109,12 @@ public class CompleteRedFar extends LinearOpMode {
                 .stopAndAdd(intake.idle())
                 .setReversed(true)
                 .setTangent(0)
-                .splineToConstantHeading(new Vector2d(-40, -12), Math.toRadians(0))
-                .splineTo(new Vector2d(20, -12), Math.toRadians(0))
-                .afterTime(1,  linearSlides.setTargetPosition(1200))
-                .splineToSplineHeading(new Pose2d(56,-32, Math.toRadians(180)), Math.toRadians(0))
+                .splineToConstantHeading(new Vector2d(-40, -10), Math.toRadians(0))
+                .splineTo(new Vector2d(20, -10), Math.toRadians(0))
+                .afterTime(1,  linearSlides.setTargetPosition(1400))
+                .splineToSplineHeading(new Pose2d(54,-26.5, Math.toRadians(180)), Math.toRadians(0))
+                .strafeTo(new Vector2d(58.0, -26.5),
+                        new TranslationalVelConstraint(10.0))
                 .endTrajectory()
                 .waitSeconds(1)
                 .stopAndAdd(dropper.dropDown())
@@ -130,8 +133,10 @@ public class CompleteRedFar extends LinearOpMode {
                 .strafeTo(new Vector2d(-36, -28.5))
                 .strafeTo(new Vector2d(-36, -41))
                 .splineToSplineHeading(new Pose2d(-36, -36, Math.toRadians(180)), Math.toRadians(270))
-                .afterTime(5,  linearSlides.setTargetPosition(1200))
-                .strafeTo(new Vector2d(58,-39))
+                .afterTime(5,  linearSlides.setTargetPosition(1400))
+                .strafeTo(new Vector2d(54,-39))
+                .strafeTo(new Vector2d(58.0, -39),
+                        new TranslationalVelConstraint(10.0))
                 .endTrajectory()
                 .waitSeconds(1)
                 .stopAndAdd(dropper.dropDown())

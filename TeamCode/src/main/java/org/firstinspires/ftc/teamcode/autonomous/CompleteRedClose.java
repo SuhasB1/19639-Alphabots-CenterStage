@@ -32,9 +32,9 @@ import org.firstinspires.ftc.vision.VisionPortal;
 public class CompleteRedClose extends LinearOpMode {
     public static double Lp = 0.015, Li = 0, Ld = 0.0003;
     public static double Rp = 0.015, Ri = 0, Rd = 0.0003;
-    public static double dumpInitPosition = 0.6;
+    public static double dumpInitPosition = 0.9;
 
-    public static double dumpPosition = 0.15;
+    public static double dumpPosition = 0.545;
     //1200 ticks
 
     public static String cameraPos = "MIDDLE";
@@ -71,8 +71,8 @@ public class CompleteRedClose extends LinearOpMode {
 
         Action mainTrajLeft = drive.actionBuilder(startPose)
                 .setReversed(true)
-                .strafeTo(new Vector2d(5.5,-45))
-                .splineToSplineHeading(new Pose2d(7,-32, Math.toRadians(0)), Math.toRadians(-90))
+                .strafeTo(new Vector2d(12,-45))
+                .splineToSplineHeading(new Pose2d(9,-32, Math.toRadians(0)), Math.toRadians(-90))
                 .endTrajectory()
                 .stopAndAdd(intake.idle())
                 .setReversed(true)
@@ -81,7 +81,7 @@ public class CompleteRedClose extends LinearOpMode {
                 .splineTo(new Vector2d(20, -10), Math.toRadians(0))
                 .afterTime(1,  linearSlides.setTargetPosition(1000))
                 .splineToSplineHeading(new Pose2d(56,-38, Math.toRadians(180)), Math.toRadians(0))
-                .strafeTo(new Vector2d(60, -38.5))
+                .strafeTo(new Vector2d(60, -41))
                 .endTrajectory()
                 .waitSeconds(1)
                 .stopAndAdd(dropper.dropDown())
@@ -103,7 +103,7 @@ public class CompleteRedClose extends LinearOpMode {
                 .strafeTo(new Vector2d(12 ,-45))
                 .splineToSplineHeading(new Pose2d(8.5,-34, Math.toRadians(180)), Math.toRadians(-90))
                 .afterTime(1,  linearSlides.setTargetPosition(1000))
-                .strafeTo(new Vector2d(56, -28.5))
+                .strafeTo(new Vector2d(56, -29.5))
                 .endTrajectory()
                 .waitSeconds(1)
                 .stopAndAdd(dropper.dropDown())
@@ -196,6 +196,8 @@ public class CompleteRedClose extends LinearOpMode {
                 }
             };
         }
+
+
         public Action initPosition() {
 
             return new Action() {

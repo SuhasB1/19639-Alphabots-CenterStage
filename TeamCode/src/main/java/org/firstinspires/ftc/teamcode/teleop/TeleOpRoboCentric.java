@@ -40,9 +40,9 @@ public class TeleOpRoboCentric extends LinearOpMode {
     Servo dumpServo1;
     Servo dumpServo2;
     Servo planeServo;
-    public static double dumpInitPosition = 0.6;
+    public static double dumpInitPosition = 0.9; //0.5
 
-    public static double dumpPosition = 0.19;
+    public static double dumpPosition = 0.52; //0.1
     //0.16 for first
     //0.15 for second (2700)
     //0.6 for init
@@ -67,10 +67,32 @@ public class TeleOpRoboCentric extends LinearOpMode {
     DcMotorEx leftSlides;
     DcMotorEx rightSlides;
 
+    DcMotorEx leftFront;
+    DcMotorEx rightFront;
+    DcMotorEx leftBack;
+    DcMotorEx rightBack;
+
+
+
 
     @Override
     public void runOpMode() {
 
+
+        leftFront = hardwareMap.get(DcMotorEx.class, "leftFront");
+        leftBack = hardwareMap.get(DcMotorEx.class, "leftBack");
+        rightBack = hardwareMap.get(DcMotorEx.class, "rightBack");
+        rightFront = hardwareMap.get(DcMotorEx.class, "rightFront");
+
+
+        leftFront.setDirection(DcMotorSimple.Direction.REVERSE);
+        leftBack.setDirection(DcMotorSimple.Direction.REVERSE);
+        rightBack.setDirection(DcMotorSimple.Direction.REVERSE);
+
+        leftFront.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        leftBack.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        rightBack.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        rightFront.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
 
         // Telemetry Init
@@ -163,11 +185,11 @@ public class TeleOpRoboCentric extends LinearOpMode {
             //slides positions
             if(gamepad2.triangle){
                 targetPos = 2600;
-                dumpPosition = 0.15;
+                dumpPosition = 0.52;
             }
             if(gamepad2.square){
                 targetPos = 2000;
-                dumpPosition = 0.155;
+                dumpPosition = 0.53;
             }
             if(gamepad2.cross){
                     dumpServo1.setPosition(dumpInitPosition);
@@ -196,12 +218,10 @@ public class TeleOpRoboCentric extends LinearOpMode {
                 dumpServo2.setPosition(0);
             }
             if(gamepad1.square) {
-                targetPos = 1700;
-                dumpServo1.setPosition(0.4);
-                dumpServo2.setPosition(0.4);
+                targetPos = 1650;
             }
             if(gamepad1.cross) {
-                targetPos = 550;
+                targetPos = 650;
             }
             if (gamepad2.left_bumper){
                 dumpServo1.setPosition(dumpInitPosition);
@@ -216,6 +236,19 @@ public class TeleOpRoboCentric extends LinearOpMode {
                 planeServo.setPosition(0.5);
             }
 
+            if(gamepad1.left_trigger > 0) {
+                leftFront.setPower(-0.3);
+                leftBack.setPower(0.3);
+                rightFront.setPower(0.3);
+                rightBack.setPower(-0.3);
+            }
+
+            if(gamepad1.right_trigger > 0) {
+                leftFront.setPower(0.3);
+                leftBack.setPower(-0.3);
+                rightFront.setPower(-0.3);
+                rightBack.setPower(0.3);
+            }
             // Update the speed
             if (padSlowMode) {
                 speed = .25;
@@ -254,6 +287,8 @@ public class TeleOpRoboCentric extends LinearOpMode {
             telemetry.addData("voltage", voltageSensor.getVoltage());
             telemetry.addData("left slides pos", left_slides_pos);
             telemetry.addData("right slides pos", right_slides_pos);
+            telemetry.addData("Servo 1 Pos", dumpServo1.getPosition());
+            telemetry.addData("Servo 2 Pos", dumpServo2.getPosition());
             telemetry.update();
         }
 
