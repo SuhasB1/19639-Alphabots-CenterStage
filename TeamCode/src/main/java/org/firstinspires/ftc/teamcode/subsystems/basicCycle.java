@@ -44,6 +44,7 @@ public class basicCycle extends OpMode {
         intakeMotor = hardwareMap.get(DcMotorEx.class, "intakeMotor");
         dumpServo1 = hardwareMap.get(Servo.class, "dumpServoLeft");
         dumpServo2 = hardwareMap.get(Servo.class, "dumpServoRight");
+
         controllerLeft = new PIDController(Lp,Li,Ld);
         controllerRight = new PIDController(Rp,Ri,Rd);
         telemetry = new MultipleTelemetry(telemetry, FtcDashboard.getInstance().getTelemetry());
@@ -59,8 +60,7 @@ public class basicCycle extends OpMode {
 
     }
 
-    @Override
-    public void loop(){
+    @Override    public void loop(){
         intakeMotor.setPower(intakePower);
         dumpServo1.setPosition(dumpPosition);
         dumpServo2.setPosition(dumpPosition);

@@ -9,6 +9,7 @@ import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
 import com.acmerobotics.dashboard.telemetry.TelemetryPacket;
 import com.acmerobotics.roadrunner.Action;
 import com.acmerobotics.roadrunner.Pose2d;
+import com.acmerobotics.roadrunner.TranslationalVelConstraint;
 import com.acmerobotics.roadrunner.Vector2d;
 import com.acmerobotics.roadrunner.ftc.Actions;
 import com.arcrobotics.ftclib.controller.PIDController;
@@ -31,9 +32,9 @@ import org.firstinspires.ftc.vision.VisionPortal;
 public class CompleteBlueFar extends LinearOpMode {
     public static double Lp = 0.015, Li = 0, Ld = 0.0003;
     public static double Rp = 0.015, Ri = 0, Rd = 0.0003;
-    public static double dumpInitPosition = 0.6;
+    public static double dumpInitPosition = 0.9;
 
-    public static double dumpPosition = 0.18;
+    public static double dumpPosition = 0.535;
     //1200 ticks
 
     public static String cameraPos = "MIDDLE";
@@ -69,6 +70,7 @@ public class CompleteBlueFar extends LinearOpMode {
         Action mainTraj = null;
 
         Action mainTrajLeft = drive.actionBuilder(startPose)
+                .waitSeconds(10)
                 .setReversed(true)
                 .lineToY(45)
                 .splineToSplineHeading(new Pose2d(-38,38, Math.toRadians(0)), Math.toRadians(-90))
@@ -78,14 +80,16 @@ public class CompleteBlueFar extends LinearOpMode {
                 .setTangent(0)
                 .splineToConstantHeading(new Vector2d(-38, 10), Math.toRadians(0))
                 .splineTo(new Vector2d(20, 10), Math.toRadians(0))
-                .afterTime(1,  linearSlides.setTargetPosition(1200))
-                .splineToSplineHeading(new Pose2d(54,42.5, Math.toRadians(180)), Math.toRadians(0))
-                .strafeTo(new Vector2d(54, 42.5))
+                .afterTime(3,  linearSlides.setTargetPosition(1400))
+                .splineToSplineHeading(new Pose2d(54,45.5, Math.toRadians(180)), Math.toRadians(0))
+                .strafeTo(new Vector2d(58.0, 46.5),
+                        new TranslationalVelConstraint(10.0))
                 .endTrajectory()
+                .waitSeconds(1)
                 .stopAndAdd(dropper.dropDown())
-                .waitSeconds(0.75)
-                .stopAndAdd(linearSlides.setTargetPosition(1700))
-                .waitSeconds(0.5)
+                .waitSeconds(1.75)
+                .stopAndAdd(linearSlides.setTargetPosition(2000))
+                .waitSeconds(1.5)
                 .stopAndAdd(dropper.initPosition())
                 .waitSeconds(0.25)
                 .stopAndAdd(linearSlides.setTargetPosition(0))
@@ -94,23 +98,27 @@ public class CompleteBlueFar extends LinearOpMode {
                 .build();
 
         Action mainTrajRight = drive.actionBuilder(startPose)
+                .waitSeconds(10)
                 .setReversed(true)
                 .strafeTo(new Vector2d(-42 ,45))
-                .splineToSplineHeading(new Pose2d(-38,33, Math.toRadians(180)), Math.toRadians(-90))
+                .splineToSplineHeading(new Pose2d(-39,33, Math.toRadians(180)), Math.toRadians(-90))
                 .endTrajectory()
                 .stopAndAdd(intake.idle())
                 .setReversed(true)
                 .setTangent(0)
                 .splineToConstantHeading(new Vector2d(-38, 10), Math.toRadians(0))
                 .splineTo(new Vector2d(20, 13), Math.toRadians(0))
-                .afterTime(1,  linearSlides.setTargetPosition(1200))
-                .splineToSplineHeading(new Pose2d(54,33, Math.toRadians(180)), Math.toRadians(0))
-                .strafeTo(new Vector2d(56, 33))
+                .afterTime(3,  linearSlides.setTargetPosition(1400))
+                .splineToSplineHeading(new Pose2d(54,28.5, Math.toRadians(180)), Math.toRadians(0))
+//                .strafeTo(new Vector2d(58, 28.5))
+                .strafeTo(new Vector2d(58.0, 28.5),
+                        new TranslationalVelConstraint(10.0))
                 .endTrajectory()
+                .waitSeconds(1)
                 .stopAndAdd(dropper.dropDown())
-                .waitSeconds(0.75)
-                .stopAndAdd(linearSlides.setTargetPosition(1700))
-                .waitSeconds(0.5)
+                .waitSeconds(1.75)
+                .stopAndAdd(linearSlides.setTargetPosition(2000))
+                .waitSeconds(1.5)
                 .stopAndAdd(dropper.initPosition())
                 .waitSeconds(0.25)
                 .stopAndAdd(linearSlides.setTargetPosition(0))
@@ -118,17 +126,21 @@ public class CompleteBlueFar extends LinearOpMode {
                 .build();
 
         Action mainTrajMiddle = drive.actionBuilder(startPose)
+                .waitSeconds(10)
                 .setReversed(true)
                 .strafeTo(new Vector2d(-36, 28.5))
-                .strafeTo(new Vector2d(-36, 38))
+                .strafeTo(new Vector2d(-36, 39.5))
                 .splineToSplineHeading(new Pose2d(-36, 32, Math.toRadians(180)), Math.toRadians(270))
-                .afterTime(5,  linearSlides.setTargetPosition(1200))
-                .strafeTo(new Vector2d(58,36))
+                .afterTime(5,  linearSlides.setTargetPosition(1400))
+                .strafeTo(new Vector2d(54,37))
+                .strafeTo(new Vector2d(58.0, 37),
+                        new TranslationalVelConstraint(10.0))
                 .endTrajectory()
+                .waitSeconds(1)
                 .stopAndAdd(dropper.dropDown())
-                .waitSeconds(0.75)
-                .stopAndAdd(linearSlides.setTargetPosition(1700))
-                .waitSeconds(0.5)
+                .waitSeconds(1.75)
+                .stopAndAdd(linearSlides.setTargetPosition(2000))
+                .waitSeconds(1.5)
                 .stopAndAdd(dropper.initPosition())
                 .waitSeconds(0.25)
                 .stopAndAdd(linearSlides.setTargetPosition(0))

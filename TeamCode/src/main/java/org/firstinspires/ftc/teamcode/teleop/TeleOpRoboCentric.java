@@ -39,13 +39,18 @@ public class TeleOpRoboCentric extends LinearOpMode {
     DcMotorEx intakeMotor;
     Servo dumpServo1;
     Servo dumpServo2;
-    public static double dumpInitPosition = 0.6;
+    Servo planeServo;
+    public static double dumpInitPosition = 0.9; //0.5
 
-    public static double dumpPosition = 0.19;
+    public static double dumpPosition = 0.52; //0.1
     //0.16 for first
     //0.15 for second (2700)
     //0.6 for init
     public static double intakePower = 0;
+
+    public static double planeInit = 0.1;
+
+    public static double planeLaunch = 0.5;
     //power is 0.75
     ElapsedTime timer = new ElapsedTime();
     ElapsedTime retractionTimer = new ElapsedTime();
@@ -62,10 +67,32 @@ public class TeleOpRoboCentric extends LinearOpMode {
     DcMotorEx leftSlides;
     DcMotorEx rightSlides;
 
+    DcMotorEx leftFront;
+    DcMotorEx rightFront;
+    DcMotorEx leftBack;
+    DcMotorEx rightBack;
+
+
+
 
     @Override
     public void runOpMode() {
 
+
+        leftFront = hardwareMap.get(DcMotorEx.class, "leftFront");
+        leftBack = hardwareMap.get(DcMotorEx.class, "leftBack");
+        rightBack = hardwareMap.get(DcMotorEx.class, "rightBack");
+        rightFront = hardwareMap.get(DcMotorEx.class, "rightFront");
+
+
+        leftFront.setDirection(DcMotorSimple.Direction.REVERSE);
+        leftBack.setDirection(DcMotorSimple.Direction.REVERSE);
+        rightBack.setDirection(DcMotorSimple.Direction.REVERSE);
+
+        leftFront.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        leftBack.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        rightBack.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        rightFront.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
 
         // Telemetry Init
@@ -77,6 +104,7 @@ public class TeleOpRoboCentric extends LinearOpMode {
         intakeMotor = hardwareMap.get(DcMotorEx.class, "intakeMotor");
         dumpServo1 = hardwareMap.get(Servo.class, "dumpServoLeft");
         dumpServo2 = hardwareMap.get(Servo.class, "dumpServoRight");
+        planeServo = hardwareMap.get(Servo.class, "planeServo");
 
 
 
@@ -98,13 +126,13 @@ public class TeleOpRoboCentric extends LinearOpMode {
         leftSlides.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         rightSlides.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 
-
-        DigitalChannel leftDistanceSensor = hardwareMap.get(DigitalChannel.class, "leftDistanceSensor");
         VoltageSensor voltageSensor = hardwareMap.voltageSensor.iterator().next();
 
 
         dumpServo1.setPosition(dumpInitPosition);
         dumpServo2.setPosition(dumpInitPosition);
+
+
         left_slides_pos = 0;
         right_slides_pos = 0;
 
@@ -157,11 +185,11 @@ public class TeleOpRoboCentric extends LinearOpMode {
             //slides positions
             if(gamepad2.triangle){
                 targetPos = 2600;
-                dumpPosition = 0.15;
+                dumpPosition = 0.52;
             }
             if(gamepad2.square){
                 targetPos = 2000;
-                dumpPosition = 0.16;
+                dumpPosition = 0.53;
             }
             if(gamepad2.cross){
                     dumpServo1.setPosition(dumpInitPosition);
@@ -170,13 +198,30 @@ public class TeleOpRoboCentric extends LinearOpMode {
             }
 
             if(gamepad2.dpad_right){
-                intakePower = -0.7;
+                intakePower = -0.9;
             }
             if(gamepad2.dpad_up){
                 intakePower = 0;
             }
+            if(gamepad1.dpad_up) {
+                planeServo.setPosition(planeLaunch);
+            }
             if(gamepad2.dpad_left){
-                intakePower = 0.7;
+                intakePower = 0.9;
+            }
+            if(gamepad1.triangle) {
+                targetPos = 2100;
+
+            }
+            if(gamepad1.circle) {
+                dumpServo1.setPosition(0);
+                dumpServo2.setPosition(0);
+            }
+            if(gamepad1.square) {
+                targetPos = 1650;
+            }
+            if(gamepad1.cross) {
+                targetPos = 650;
             }
             if (gamepad2.left_bumper){
                 dumpServo1.setPosition(dumpInitPosition);
@@ -186,24 +231,31 @@ public class TeleOpRoboCentric extends LinearOpMode {
                 dumpServo1.setPosition(dumpPosition);
                 dumpServo2.setPosition(dumpPosition);
             }
-            boolean detectedLeft = leftDistanceSensor.getState();
-            detectedLeft = !detectedLeft;
-            if (detectedLeft){
-                intakePower = -0.7;
-                timer.startTime();
-                if(timer.seconds() >= 2){
-                    intakePower = 0;
-                }
-            }else{
-                timer.reset();
+
+            if(gamepad1.dpad_up) {
+                planeServo.setPosition(0.5);
+            }
+
+            if(gamepad1.left_trigger > 0) {
+                leftFront.setPower(-0.3);
+                leftBack.setPower(0.3);
+                rightFront.setPower(0.3);
+                rightBack.setPower(-0.3);
+            }
+
+            if(gamepad1.right_trigger > 0) {
+                leftFront.setPower(0.3);
+                leftBack.setPower(-0.3);
+                rightFront.setPower(-0.3);
+                rightBack.setPower(0.3);
             }
             // Update the speed
             if (padSlowMode) {
-                speed = .35;
+                speed = .25;
             } else if (padFastMode) {
                 speed = 1;
             } else {
-                speed = .8;
+                speed = .9;
             }
             drive.setDrivePowers(new PoseVelocity2d(
                     new Vector2d(
@@ -235,6 +287,8 @@ public class TeleOpRoboCentric extends LinearOpMode {
             telemetry.addData("voltage", voltageSensor.getVoltage());
             telemetry.addData("left slides pos", left_slides_pos);
             telemetry.addData("right slides pos", right_slides_pos);
+            telemetry.addData("Servo 1 Pos", dumpServo1.getPosition());
+            telemetry.addData("Servo 2 Pos", dumpServo2.getPosition());
             telemetry.update();
         }
 

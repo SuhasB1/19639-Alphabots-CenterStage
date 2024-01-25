@@ -32,9 +32,9 @@ import org.firstinspires.ftc.vision.VisionPortal;
 public class CompleteRedClose extends LinearOpMode {
     public static double Lp = 0.015, Li = 0, Ld = 0.0003;
     public static double Rp = 0.015, Ri = 0, Rd = 0.0003;
-    public static double dumpInitPosition = 0.6;
+    public static double dumpInitPosition = 0.9;
 
-    public static double dumpPosition = 0.18;
+    public static double dumpPosition = 0.545;
     //1200 ticks
 
     public static String cameraPos = "MIDDLE";
@@ -72,21 +72,22 @@ public class CompleteRedClose extends LinearOpMode {
         Action mainTrajLeft = drive.actionBuilder(startPose)
                 .setReversed(true)
                 .strafeTo(new Vector2d(12,-45))
-                .splineToSplineHeading(new Pose2d(11,-32, Math.toRadians(0)), Math.toRadians(-90))
+                .splineToSplineHeading(new Pose2d(9,-32, Math.toRadians(0)), Math.toRadians(-90))
                 .endTrajectory()
                 .stopAndAdd(intake.idle())
                 .setReversed(true)
                 .setTangent(0)
                 .splineToConstantHeading(new Vector2d(12, -10), Math.toRadians(0))
                 .splineTo(new Vector2d(20, -10), Math.toRadians(0))
-                .afterTime(1,  linearSlides.setTargetPosition(1200))
+                .afterTime(1,  linearSlides.setTargetPosition(1000))
                 .splineToSplineHeading(new Pose2d(56,-38, Math.toRadians(180)), Math.toRadians(0))
-                .strafeTo(new Vector2d(60, -36))
+                .strafeTo(new Vector2d(60, -41))
                 .endTrajectory()
+                .waitSeconds(1)
                 .stopAndAdd(dropper.dropDown())
-                .waitSeconds(0.75)
+                .waitSeconds(1.75)
                 .stopAndAdd(linearSlides.setTargetPosition(1700))
-                .waitSeconds(0.5)
+                .waitSeconds(1.5)
                 .stopAndAdd(dropper.initPosition())
                 .waitSeconds(0.25)
                 .stopAndAdd(linearSlides.setTargetPosition(0))
@@ -100,14 +101,15 @@ public class CompleteRedClose extends LinearOpMode {
         Action mainTrajRight = drive.actionBuilder(startPose)
                 .setReversed(true)
                 .strafeTo(new Vector2d(12 ,-45))
-                .splineToSplineHeading(new Pose2d(8.5,-32, Math.toRadians(180)), Math.toRadians(-90))
-                .afterTime(1,  linearSlides.setTargetPosition(1200))
-                .strafeTo(new Vector2d(56, -28.5))
+                .splineToSplineHeading(new Pose2d(8.5,-34, Math.toRadians(180)), Math.toRadians(-90))
+                .afterTime(1,  linearSlides.setTargetPosition(1000))
+                .strafeTo(new Vector2d(56, -29.5))
                 .endTrajectory()
+                .waitSeconds(1)
                 .stopAndAdd(dropper.dropDown())
-                .waitSeconds(0.75)
+                .waitSeconds(1.75)
                 .stopAndAdd(linearSlides.setTargetPosition(1700))
-                .waitSeconds(0.5)
+                .waitSeconds(1.5)
                 .stopAndAdd(dropper.initPosition())
                 .waitSeconds(0.25)
                 .stopAndAdd(linearSlides.setTargetPosition(0))
@@ -122,13 +124,14 @@ public class CompleteRedClose extends LinearOpMode {
                 .strafeTo(new Vector2d(12, -30))
                 .strafeTo(new Vector2d(12, -38))
                 .splineToSplineHeading(new Pose2d(12, -33, Math.toRadians(180)), Math.toRadians(270))
-                .afterTime(1,  linearSlides.setTargetPosition(1200))
+                .afterTime(1,  linearSlides.setTargetPosition(1000))
                 .strafeTo(new Vector2d(56,-35))
                 .endTrajectory()
+                .waitSeconds(1)
                 .stopAndAdd(dropper.dropDown())
-                .waitSeconds(0.75)
+                .waitSeconds(1.75)
                 .stopAndAdd(linearSlides.setTargetPosition(1700))
-                .waitSeconds(0.5)
+                .waitSeconds(1.5)
                 .stopAndAdd(dropper.initPosition())
                 .waitSeconds(0.25)
                 .stopAndAdd(linearSlides.setTargetPosition(0))
@@ -193,6 +196,8 @@ public class CompleteRedClose extends LinearOpMode {
                 }
             };
         }
+
+
         public Action initPosition() {
 
             return new Action() {
