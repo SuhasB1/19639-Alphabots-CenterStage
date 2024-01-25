@@ -36,13 +36,13 @@ public class RedPropThreshold implements VisionProcessor, CameraStreamSource {
     double redThreshold = 0.4;
 
     String outStr = "center"; //Set a default value in case vision does not work
-    double averagedRightBox1 = 0;
+    double averagedleftBox1 = 0;
     double averagedMiddleBox1 = 0;
 
 
     static final Rect MIDDLE_RECTANGLE = new Rect(185, 150, 80, 80);
 
-    static final Rect RIGHT_RECTANGLE = new Rect(445, 200, 80, 80);
+    static final Rect left_RECTANGLE = new Rect(445, 200, 80, 80);
     private final AtomicReference<Bitmap> lastFrame =
             new AtomicReference<>(Bitmap.createBitmap(1, 1, Bitmap.Config.RGB_565));
 
@@ -76,21 +76,21 @@ public class RedPropThreshold implements VisionProcessor, CameraStreamSource {
         lowMat.release();
         highMat.release();
 
-        double RightBox = Core.sumElems(finalMat.submat(RIGHT_RECTANGLE)).val[0];
+        double leftBox = Core.sumElems(finalMat.submat(left_RECTANGLE)).val[0];
         double middleBox = Core.sumElems(finalMat.submat(MIDDLE_RECTANGLE)).val[0];
 
-        double averagedRightBox = RightBox / RIGHT_RECTANGLE.area() / 255;
+        double averagedleftBox = leftBox / left_RECTANGLE.area() / 255;
         double averagedMiddleBox = middleBox / MIDDLE_RECTANGLE.area() / 255; //Makes value [0,1]
 
 
-        if (averagedRightBox > redThreshold) {        //Must Tune red Threshold
-            outStr = "right";
-            averagedRightBox1 = averagedRightBox;
+        if (averagedleftBox > redThreshold) {        //Must Tune red Threshold
+            outStr = "left";
+            averagedleftBox1 = averagedleftBox;
         } else if (averagedMiddleBox > redThreshold) {
             outStr = "center";
             averagedMiddleBox1 = averagedMiddleBox;
         } else {
-            outStr = "left";
+            outStr = "right";
         }
 
         finalMat.copyTo(frame); /*This line should only be added in when you want to see your custom pipeline
@@ -126,20 +126,20 @@ public class RedPropThreshold implements VisionProcessor, CameraStreamSource {
         Paint nonSelectedPaint = new Paint(selectedPaint);
         nonSelectedPaint.setColor(Color.RED);
 
-        android.graphics.Rect drawRectangleRight = makeGraphicsRect(RIGHT_RECTANGLE, scaleBmpPxToCanvasPx);
+        android.graphics.Rect drawRectangleleft = makeGraphicsRect(left_RECTANGLE, scaleBmpPxToCanvasPx);
         android.graphics.Rect drawRectangleMiddle = makeGraphicsRect(MIDDLE_RECTANGLE, scaleBmpPxToCanvasPx);
 
         switch (outStr) {
             case "left":
-                canvas.drawRect(drawRectangleRight, nonSelectedPaint);
+                canvas.drawRect(drawRectangleleft, nonSelectedPaint);
                 canvas.drawRect(drawRectangleMiddle, nonSelectedPaint);
                 break;
             case "center":
-                canvas.drawRect(drawRectangleRight, nonSelectedPaint);
+                canvas.drawRect(drawRectangleleft, nonSelectedPaint);
                 canvas.drawRect(drawRectangleMiddle, selectedPaint);
                 break;
             case "right":
-                canvas.drawRect(drawRectangleRight, selectedPaint);
+                canvas.drawRect(drawRectangleleft, selectedPaint);
                 canvas.drawRect(drawRectangleMiddle, nonSelectedPaint);
                 break;
         }
@@ -149,8 +149,8 @@ public class RedPropThreshold implements VisionProcessor, CameraStreamSource {
         return outStr;
     }
 
-    public double getAveragedRightBox() {
-        return averagedRightBox1;
+    public double getAveragedleftBox() {
+        return averagedleftBox1;
     }
 
     public double getAveragedMiddleBox() {
